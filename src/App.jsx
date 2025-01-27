@@ -1,13 +1,19 @@
-import Adminpage from "./components/addminpage.jsx"
+import { BrowserRouter, Route, Routes } from "react-router-dom"
+import Adminpage from "./pages/admin/addminpage.jsx"
+import HomePage from "./pages/home/homePage.jsx"
 
 
 function App() {
 
 
-  return (
-    <div>
-      <Adminpage/>
-    </div>
+  return ( 
+    <BrowserRouter>
+    <Routes path ="/*">
+      <Route path="/admin/*" element={<Adminpage/>}/>
+      <Route path="/*" element={<HomePage/>}/>
+      
+    </Routes>
+    </BrowserRouter>
   )
 }
 
