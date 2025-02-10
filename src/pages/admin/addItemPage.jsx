@@ -1,12 +1,46 @@
+
+import axios from "axios";
 import { useState } from "react";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 export default function AddItemPage() {
     const [productKey, setProductKey] = useState("");
     const [productName, setProductName] = useState("");
-    const [productPrice, setProductPrice] = useState("");
+    const [productPrice, setProductPrice] = useState(0);
     const [productType, setProductType] = useState("");
     const [productDimentions, setProductDimentions] = useState("");
     const [productDescription, setProductDescription] = useState("");
+    const navigate = useNavigate();
+
+    async function handleAdd() {
+        console.log(productKey, productName, productPrice, productType, productDimentions, productDescription);
+
+        const token = localStorage.getItem("token")
+      
+        if(token) {
+            try{
+           const result = await axios.post("http://localhost:3000/api/products",{
+                key : productKey,
+                name : productName,
+                price : productPrice,
+                category : productType,
+                dimensions : productDimentions,
+                description : productDescription
+            },{
+                headers : {
+                    Authorization : "Bearer " + token
+                }
+            })
+            toast.success(result.data.message);
+            navigate("/admin/items");
+        } catch (err) {
+            toast.error(err.response.data.message);
+        }
+        }else {
+            toast.error("Please login first");
+        }
+    }
 
     return (
         <div className="w-full h-full flex flex-col items-center">
@@ -56,13 +90,10 @@ export default function AddItemPage() {
                     onChange={(e) => setProductDescription(e.target.value)}
                     className="border p-2 rounded"
                 />
-                <button
-                    
-                    className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
-                >
+                <button onClick={handleAdd} className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600">
                     Add
                 </button>
-                <button className="bg-red-500 text-white p-2 rounded hover:bg-red-600">
+                <button onClick={() => navigate("/admin/items")} className="bg-red-500 text-white p-2 rounded hover:bg-red-600">
                     Cancel
                 </button>
             </div>
