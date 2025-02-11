@@ -4,6 +4,7 @@ import { LuSpeaker } from "react-icons/lu";
 import { Link, Route, Routes } from "react-router-dom";
 import AdminItemspage from "./adminItemspage";
 import AddItemPage from "./addItemPage";
+import UpdateItemPage from "./updateItemPage";
 
 export default function Adminpage() {
    return(
@@ -32,6 +33,7 @@ export default function Adminpage() {
         <Route path="/booking" element={<h1>Booking</h1>}/>
         <Route path="/items" element={<AdminItemspage/>}/>
         <Route path="/items/add" element={<AddItemPage/>}/>
+        <Route path="items/edit" element={<UpdateItemPage/>}/>
       </Routes>
     </div>
     </div>
