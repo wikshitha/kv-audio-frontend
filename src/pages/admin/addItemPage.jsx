@@ -3,6 +3,7 @@ import axios from "axios";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import mediaUpload from "../../utils/mediaUpload";
 
 export default function AddItemPage() {
     const [productKey, setProductKey] = useState("");
@@ -11,22 +12,43 @@ export default function AddItemPage() {
     const [productType, setProductType] = useState("");
     const [productDimentions, setProductDimentions] = useState("");
     const [productDescription, setProductDescription] = useState("");
+    const [productImages, setProductImages] = useState([]);
     const navigate = useNavigate();
 
     async function handleAdd() {
+        console.log(productImages)
+        const promises = []
+        for(let i = 0; i < productImages.length; i++) {
+            const promise = mediaUpload(productImages[i])
+            promises.push(promise)
+            // if(i==5) {
+            //     toast.error("You can only upload 5 images");
+            //     break
+            // }
+        }
+
         console.log(productKey, productName, productPrice, productType, productDimentions, productDescription);
 
         const token = localStorage.getItem("token")
       
         if(token) {
             try{
+                // Promise.all(promises).then((result)=>{
+                //     console.log(result);
+                // }).catch((err)=>{
+                //     toast.error(err);
+                // })
+        
+                const imageUrls = await Promise.all(promises)
+
            const result = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/products`,{
                 key : productKey,
                 name : productName,
                 price : productPrice,
                 category : productType,
                 dimensions : productDimentions,
-                description : productDescription
+                description : productDescription,
+                images : imageUrls
             },{
                 headers : {
                     Authorization : "Bearer " + token
@@ -40,7 +62,7 @@ export default function AddItemPage() {
         }else {
             toast.error("Please login first");
         }
-    }
+     }
 
     return (
         <div className="w-full h-full flex flex-col items-center">
@@ -88,6 +110,13 @@ export default function AddItemPage() {
                     placeholder="Product Description"
                     value={productDescription}
                     onChange={(e) => setProductDescription(e.target.value)}
+                    className="border p-2 rounded"
+                />
+                <input
+                    type="file"
+                    multiple
+                    placeholder="Product Images"
+                    onChange={(e) => setProductImages(e.target.files)}
                     className="border p-2 rounded"
                 />
                 <button onClick={handleAdd} className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600">

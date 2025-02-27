@@ -2,7 +2,7 @@ export default function ProductCard({ item }) {
   return (
     <div className="w-[300px] rounded-lg shadow-lg overflow-hidden m-4 relative bg-secondary">
       <img
-        src={item.image[0]}
+        src={item.images[0]}
         alt={item.name}
         className="w-full h-48 object-cover"
       />
