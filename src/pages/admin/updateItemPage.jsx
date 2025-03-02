@@ -3,6 +3,7 @@ import axios from "axios";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
+import mediaUpload from "../../utils/mediaUpload";
 
 export default function UpdateItemPage() {
     const location = useLocation();
@@ -13,21 +14,36 @@ export default function UpdateItemPage() {
     const [productType, setProductType] = useState(location.state.category);
     const [productDimentions, setProductDimentions] = useState(location.state.dimensions);
     const [productDescription, setProductDescription] = useState(location.state.description);
+    const [productImages, setProductImages] = useState([]);
+
     const navigate = useNavigate();
 
-    async function handleUpdate() {
+    async function handleUpdateItem() {
+
+        let updatingImages = location.state.images
+
+        if(productImages.length > 0) {
+            const promises = []
+            for(let i = 0; i < productImages.length; i++) {
+                const promise = mediaUpload(productImages[i])
+                promises.push(promise)
+            }
+            updatingImages = await Promise.all(promises)
+        }
+
         console.log(productKey, productName, productPrice, productType, productDimentions, productDescription);
 
         const token = localStorage.getItem("token")
       
         if(token) {
             try{
-           const result = await axios.put(`${import.meta.env.VITE_BACKEND_URL}api/products/${productKey}`,{
+           const result = await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/products/${productKey}`,{
                 name : productName,
                 price : productPrice,
                 category : productType,
                 dimensions : productDimentions,
-                description : productDescription
+                description : productDescription,
+                images : updatingImages
             },{
                 headers : {
                     Authorization : "Bearer " + token
@@ -36,6 +52,7 @@ export default function UpdateItemPage() {
             toast.success(result.data.message);
             navigate("/admin/items");
         } catch (err) {
+            console.log(err);
             toast.error(err.response.data.message);
         }
         }else {
@@ -92,7 +109,14 @@ export default function UpdateItemPage() {
                     onChange={(e) => setProductDescription(e.target.value)}
                     className="border p-2 rounded"
                 />
-                <button onClick={handleUpdate} className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600">
+                 <input
+                    type="file"
+                    multiple
+                    placeholder="Product Images"
+                    onChange={(e) => setProductImages(e.target.files)}
+                    className="border p-2 rounded"
+                />
+                <button onClick={handleUpdateItem} className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600">
                     Update
                 </button>
                 <button onClick={() => navigate("/admin/items")} className="bg-red-500 text-white p-2 rounded hover:bg-red-600">
