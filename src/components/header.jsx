@@ -1,3 +1,4 @@
+import { FaCartShopping } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 
 export default function Header() {
@@ -8,6 +9,7 @@ export default function Header() {
             <Link to ="/contact" className="text-[25px] font-bold m-1">Contact</Link>
             <Link to="/gallery" className="text-[25px] font-bold m-1">Gallery</Link>
             <Link to ="/items" className="text-[25px] font-bold m-1">Items</Link>
+            <Link to ="/booking" className="text-[25px] font-bold m-1 absolute right-3"><FaCartShopping/></Link>
         </header>
     )
 }
