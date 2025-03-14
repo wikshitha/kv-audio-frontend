@@ -21,7 +21,7 @@ export default function LoginPage() {
       }
     ).then((res)=>{
 
-      console.log(res)
+      console.log(res.data.user)
       toast.success("Login Success")
       const user = res.data.user
       localStorage.setItem("token",res.data.token)
