@@ -50,6 +50,11 @@ export default function LoginPage() {
       toast.success("Login Success")
       const user = res.data.user
       localStorage.setItem("token",res.data.token)
+
+      if(user.emailVerified == false){
+        navigate("/verify-email")
+        return
+      }
       
       if(user.role === "Admin"){
         navigate("/admin/")
@@ -60,7 +65,7 @@ export default function LoginPage() {
 
     }).catch((err)=>{
       console.log(err)
-      toast.error(err.response.data.error)
+      toast.error(err.response.data.message)
     })
 
   }
