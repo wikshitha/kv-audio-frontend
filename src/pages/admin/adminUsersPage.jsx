@@ -79,7 +79,7 @@ export default function AdminUsersPage() {
 										{user.phone || user.phoneNumber}
 									</td>
 									<td className="px-4 py-2">{user.address}</td>
-									<td onClick={()=>{handleBlockUser(user.email)}} className="px-4 py-2 cursor-pointer">{user.isBlocked?"BLOCKED":"ACTIVE"}</td>
+									<td onClick={()=>{handleBlockUser(user.email)}} className="px-4 py-2 cursor-pointer">{user.isBloked?"BLOCKED":"ACTIVE"}</td>
 								</tr>
 							))}
 						</tbody>
