@@ -9,6 +9,7 @@ import AdminUsersPage from "./adminUsersPage";
 import AdminOrdersPage from "./adminOrdersPage";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import DashboardPage from "./dashboard";
 
 export default function Adminpage() {
   const [userValidated, setUserValidated] = useState(false);
@@ -37,10 +38,10 @@ export default function Adminpage() {
    return(
     <div className="w-full h-screen flex">
     <div className="w-[200px] h-full bg-green-300" >
-      <button className="w-full h-[40px] text-[25px] font-bold flex justify-center items-center">
+      <Link to="/admin"  className="w-full h-[40px] text-[25px] font-bold flex justify-center items-center">
         <GoGraph/>
         Dashboard
-      </button>
+      </Link>
       <Link to="/admin/orders" className="w-full h-[40px] text-[25px] font-bold flex justify-center items-center">
         <FaRegBookmark/>
         Orders
@@ -62,6 +63,7 @@ export default function Adminpage() {
         <Route path="/items" element={<AdminItemspage/>}/>
         <Route path="/items/add" element={<AddItemPage/>}/>
         <Route path="items/edit" element={<UpdateItemPage/>}/>
+        <Route path="/" element={<DashboardPage/>}/>
       </Routes>}
     </div>
     </div>

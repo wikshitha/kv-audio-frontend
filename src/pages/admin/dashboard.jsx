@@ -11,7 +11,7 @@ export default function DashboardPage() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     axios
-      .get(`${import.meta.env.VITE_BACKEND_URL}/api/admin/stats`, {
+      .get(`${import.meta.env.VITE_BACKEND_URL}/api/users/stats`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {
