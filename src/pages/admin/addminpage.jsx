@@ -35,37 +35,51 @@ export default function Adminpage() {
       setUserValidated(false);
     })
   },[])
-   return(
+  return (
     <div className="w-full h-screen flex">
-    <div className="w-[200px] h-full bg-green-300" >
-      <Link to="/admin"  className="w-full h-[40px] text-[25px] font-bold flex justify-center items-center">
-        <GoGraph/>
-        Dashboard
-      </Link>
-      <Link to="/admin/orders" className="w-full h-[40px] text-[25px] font-bold flex justify-center items-center">
-        <FaRegBookmark/>
-        Orders
-      </Link>
-      <Link to="/admin/items" className="w-full h-[40px] text-[25px] font-bold flex justify-center items-center">
-        <LuSpeaker/>
-       Items
-      </Link>
-      <Link to="/admin/users" className="w-full h-[40px] text-[25px] font-bold flex justify-center items-center">
-        <FaRegUser/>
-        Users
-      </Link>
-
+      <div className="w-[200px] h-full bg-green-300 overflow-auto">
+        <Link
+          to="/admin"
+          className="w-full h-[40px] text-[25px] font-bold flex justify-center items-center"
+        >
+          <GoGraph />
+          Dashboard
+        </Link>
+        <Link
+          to="/admin/orders"
+          className="w-full h-[40px] text-[25px] font-bold flex justify-center items-center"
+        >
+          <FaRegBookmark />
+          Orders
+        </Link>
+        <Link
+          to="/admin/items"
+          className="w-full h-[40px] text-[25px] font-bold flex justify-center items-center"
+        >
+          <LuSpeaker />
+          Items
+        </Link>
+        <Link
+          to="/admin/users"
+          className="w-full h-[40px] text-[25px] font-bold flex justify-center items-center"
+        >
+          <FaRegUser />
+          Users
+        </Link>
+      </div>
+      <div className="w-[calc(100vw-200px)] h-full overflow-auto">
+        {userValidated && (
+          <Routes path="/*">
+            <Route path="/orders" element={<AdminOrdersPage />} />
+            <Route path="/users" element={<AdminUsersPage />} />
+            <Route path="/items" element={<AdminItemspage />} />
+            <Route path="/items/add" element={<AddItemPage />} />
+            <Route path="items/edit" element={<UpdateItemPage />} />
+            <Route path="/" element={<DashboardPage />} />
+          </Routes>
+        )}
+      </div>
     </div>
-    <div className="w-[calc(100vw-200px)]">
-      {userValidated &&<Routes path="/*">
-        <Route path="/orders" element={<AdminOrdersPage/>}/>
-        <Route path="/users" element={<AdminUsersPage/>}/>
-        <Route path="/items" element={<AdminItemspage/>}/>
-        <Route path="/items/add" element={<AddItemPage/>}/>
-        <Route path="items/edit" element={<UpdateItemPage/>}/>
-        <Route path="/" element={<DashboardPage/>}/>
-      </Routes>}
-    </div>
-    </div>
-   )
+  );
+  
 }
