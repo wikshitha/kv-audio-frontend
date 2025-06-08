@@ -4,18 +4,55 @@ import axios from "axios";
 
 const Home = () => {
   const [reviews, setReviews] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [newReview, setNewReview] = useState({ coment: "", rating: "" });
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     axios
       .get(`${import.meta.env.VITE_BACKEND_URL}/api/reviews`)
       .then((res) => {
         setReviews(res.data.filter((review) => review.isApproved)); // Fetch only approved reviews
-        console.log(res.data)
+        setIsLoading(false);
       })
       .catch((error) => {
         console.error("Failed to fetch reviews:", error);
+        setError("Failed to fetch reviews. Please try again later.");
+        setIsLoading(false);
       });
   }, []);
+
+  const addReview = () => {
+    const token = localStorage.getItem("authToken"); // Get the token from localStorage
+
+    if (!token) {
+      alert("You must be logged in to submit a review.");
+      return;
+    }
+
+    axios
+      .post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/reviews`,
+        newReview,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Add token to Authorization header
+          },
+        }
+      )
+      .then((res) => {
+        alert(res.data.message);
+        setNewReview({ coment: "", rating: "" });
+        setIsModalOpen(false);
+        setIsLoading(true);
+        setReviews([...reviews, res.data.review]); // Update the UI with the new review
+      })
+      .catch((error) => {
+        console.error("Failed to add review:", error);
+        alert("Failed to add review. Please try again later.");
+      });
+  };
 
   return (
     <div className="w-full h-full flex flex-col">
@@ -36,53 +73,99 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="w-full py-12 bg-gray-100">
-        <h2 className="text-3xl font-bold text-center mb-8">Why Choose AudioRental?</h2>
-        <div className="flex flex-wrap justify-center gap-6 px-4">
-          <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm text-center transition-transform duration-300 hover:scale-105">
-            <h3 className="text-xl font-semibold mb-4">Top Quality Equipment</h3>
-            <p>Our audio gear is maintained to ensure the best performance for your projects.</p>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm text-center transition-transform duration-300 hover:scale-105">
-            <h3 className="text-xl font-semibold mb-4">Affordable Rates</h3>
-            <p>We offer competitive pricing to suit both small and large-scale needs.</p>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm text-center transition-transform duration-300 hover:scale-105">
-            <h3 className="text-xl font-semibold mb-4">Flexible Rentals</h3>
-            <p>Rent by the day, week, or month. We're here to accommodate your schedule.</p>
-          </div>
-        </div>
-      </section>
-
       {/* Testimonials Section */}
       <section className="w-full py-12 bg-white">
         <h2 className="text-3xl font-bold text-center mb-8">What Our Customers Say</h2>
-        <div className="flex flex-wrap justify-center gap-6 px-4">
-          {reviews.length > 0 ? (
-            reviews.map((review) => (
-                
-              <div
-                key={review._id}
-                className="bg-gray-100 p-6 rounded-lg shadow-lg max-w-sm text-center"
-              >
-                <img
-                  src={review.profilePic}
-                  alt={`${review.name}'s profile`}
-                  className="w-16 h-16 rounded-full mx-auto mb-4"
-                />
-                <p className="italic">"{review.coment}"</p>
-                <div className="mt-2 text-yellow-500">
-                  {"★".repeat(review.rating) + "☆".repeat(5 - review.rating)}
+        {isLoading ? (
+          <p className="text-center text-gray-500">Loading reviews...</p>
+        ) : error ? (
+          <p className="text-center text-red-500">{error}</p>
+        ) : (
+          <div className="flex flex-wrap justify-center gap-6 px-4">
+            {reviews.length > 0 ? (
+              reviews.map((review) => (
+                <div
+                  key={review._id}
+                  className="bg-gray-100 p-6 rounded-lg shadow-lg max-w-sm text-center"
+                >
+                  <img
+                    src={review.profilePic}
+                    alt={`${review.name}'s profile`}
+                    className="w-16 h-16 rounded-full mx-auto mb-4"
+                  />
+                  <p className="italic">"{review.coment}"</p>
+                  <div className="mt-2 text-yellow-500">
+                    {"★".repeat(review.rating) + "☆".repeat(5 - review.rating)}
+                  </div>
+                  <h4 className="font-bold mt-4">- {review.name}</h4>
                 </div>
-                <h4 className="font-bold mt-4">- {review.name}</h4>
-              </div>
-            ))
-          ) : (
-            <p className="text-center text-gray-500">No reviews available yet.</p>
-          )}
-        </div>
+              ))
+            ) : (
+              <p className="text-center text-gray-500">No reviews available yet.</p>
+            )}
+          </div>
+        )}
       </section>
+
+      {/* Add Review Button */}
+      <div className="w-full flex justify-center py-4">
+        <button
+          onClick={() => setIsModalOpen(true)}
+          className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg shadow-lg"
+        >
+          Add Your Review
+        </button>
+      </div>
+
+      {/* Add Review Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-[#00000075] bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white rounded-lg shadow-lg p-6 w-96 relative">
+            <button
+              onClick={() => setIsModalOpen(false)}
+              className="absolute top-2 right-2 text-gray-500 hover:text-red-500 text-xl"
+            >
+              &times;
+            </button>
+            <h2 className="text-2xl font-bold text-center mb-4">Add Your Review</h2>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                addReview();
+              }}
+            >
+              <textarea
+                name="coment"
+                placeholder="Write your review here..."
+                className="w-full p-3 border rounded-lg mb-4"
+                value={newReview.coment}
+                onChange={(e) => setNewReview({ ...newReview, coment: e.target.value })}
+                required
+              ></textarea>
+              <select
+                name="rating"
+                className="w-full p-3 border rounded-lg mb-4"
+                value={newReview.rating}
+                onChange={(e) => setNewReview({ ...newReview, rating: e.target.value })}
+                required
+              >
+                <option value="">Select a rating</option>
+                {[...Array(5).keys()].map((num) => (
+                  <option key={num + 1} value={num + 1}>
+                    {num + 1} Star{num > 0 && "s"}
+                  </option>
+                ))}
+              </select>
+              <button
+                type="submit"
+                className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg shadow-lg w-full"
+              >
+                Submit Review
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
 
       {/* How It Works Section */}
       <section className="w-full py-12 bg-gray-100">
