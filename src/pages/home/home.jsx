@@ -8,8 +8,35 @@ const Home = () => {
   const [error, setError] = useState(null);
   const [newReview, setNewReview] = useState({ coment: "", rating: "" });
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentUserEmail, setCurrentUserEmail] = useState(null); // State for storing user email
+
+  const parseJWT = (token) => {
+    try {
+      const base64Url = token.split(".")[1]; // Get the payload part of the token
+      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/"); // Fix Base64 encoding
+      const jsonPayload = decodeURIComponent(
+        atob(base64)
+          .split("")
+          .map((c) => `%${("00" + c.charCodeAt(0).toString(16)).slice(-2)}`)
+          .join("")
+      );
+      return JSON.parse(jsonPayload); // Parse JSON payload
+    } catch (err) {
+      console.error("Failed to parse token:", err);
+      return null;
+    }
+  };
 
   useEffect(() => {
+    const token = localStorage.getItem("token"); // Get the token from localStorage
+
+    if (token) {
+      const decoded = parseJWT(token); // Decode the token manually
+      if (decoded && decoded.email) {
+        setCurrentUserEmail(decoded.email); // Set the user's email from the decoded token
+      }
+    }
+
     axios
       .get(`${import.meta.env.VITE_BACKEND_URL}/api/reviews`)
       .then((res) => {
@@ -24,7 +51,7 @@ const Home = () => {
   }, []);
 
   const addReview = () => {
-    const token = localStorage.getItem("authToken"); // Get the token from localStorage
+    const token = localStorage.getItem("token"); // Get the token from localStorage
 
     if (!token) {
       alert("You must be logged in to submit a review.");
@@ -53,6 +80,31 @@ const Home = () => {
         alert("Failed to add review. Please try again later.");
       });
   };
+
+  function deleteReview(email) {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      alert("You must be logged in to delete a review.");
+      return;
+    }
+    
+
+    axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/reviews/${email}`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    })
+    .then(() => {
+        console.log("Review deleted successfully");
+        setIsModalOpen(false);
+        setReviews(reviews.filter((review) => review.email !== email)); // Update the UI after deletion
+        setIsLoading(true);
+    })
+    .catch((err) => {
+        console.error("Error deleting review:", err);
+    });
+}
 
   return (
     <div className="w-full h-full flex flex-col">
@@ -98,6 +150,16 @@ const Home = () => {
                     {"★".repeat(review.rating) + "☆".repeat(5 - review.rating)}
                   </div>
                   <h4 className="font-bold mt-4">- {review.name}</h4>
+
+                  {/* Delete button for review owner */}
+                  {review.email === currentUserEmail && (
+                    <button
+                      onClick={() => deleteReview(review.email)}
+                      className="bg-red-500 text-white px-4 py-2 rounded-lg mt-4"
+                    >
+                      Delete
+                    </button>
+                  )}
                 </div>
               ))
             ) : (
