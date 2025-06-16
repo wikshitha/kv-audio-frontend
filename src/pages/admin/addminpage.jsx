@@ -1,16 +1,19 @@
 import { FaRegBookmark, FaRegUser, FaRegStar } from "react-icons/fa";
 import { GoGraph } from "react-icons/go";
 import { LuSpeaker } from "react-icons/lu";
+import { MdPhotoLibrary } from "react-icons/md"; // Icon for gallery
 import { Link, Route, Routes } from "react-router-dom";
 import AdminItemspage from "./adminItemspage";
 import AddItemPage from "./addItemPage";
 import UpdateItemPage from "./updateItemPage";
 import AdminUsersPage from "./adminUsersPage";
 import AdminOrdersPage from "./adminOrdersPage";
-import AdminReviewsPage from "./adminReviewsPage"; 
+import AdminReviewsPage from "./adminReviewsPage";
+import AdminGalleryPage from "./adminGalleryPage"; // Import the new page
 import { useEffect, useState } from "react";
 import axios from "axios";
 import DashboardPage from "./dashboard";
+import AddGalleriesPage from "./addGalleriesPage";
 
 export default function Adminpage() {
   const [userValidated, setUserValidated] = useState(false);
@@ -78,6 +81,13 @@ export default function Adminpage() {
           <FaRegStar className="mr-2" />
           Reviews
         </Link>
+        <Link
+          to="/admin/gallery"
+          className="w-full h-[40px] text-[25px] font-bold flex justify-center items-center"
+        >
+          <MdPhotoLibrary className="mr-2" />
+          Gallery
+        </Link>
       </div>
 
       {/* Main Content */}
@@ -90,6 +100,8 @@ export default function Adminpage() {
             <Route path="/items/add" element={<AddItemPage />} />
             <Route path="/items/edit" element={<UpdateItemPage />} />
             <Route path="/reviews" element={<AdminReviewsPage />} />
+            <Route path="/gallery" element={<AdminGalleryPage />} />
+            <Route path="/gallery/add" element={<AddGalleriesPage />} />
             <Route path="/" element={<DashboardPage />} />
           </Routes>
         )}
