@@ -1,15 +1,14 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { CiCirclePlus } from "react-icons/ci";
-import { Link, useNavigate } from "react-router-dom";
-import { FaEdit, FaTrashAlt } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import { FaTrashAlt } from "react-icons/fa";
 
 
 
-export default function AdminItemsPage() {
+export default function AdminGalleryPage() {
 	const [gallery, setgallery] = useState([]);
 	const [galleryLoaded, setgalleryLoaded] = useState(false);
-    const navigate = useNavigate()
 
 	useEffect(() => {
 		if (!galleryLoaded) {
