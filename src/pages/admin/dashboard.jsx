@@ -1,12 +1,14 @@
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { Chart } from "chart.js/auto";
+import { motion } from "framer-motion";
 
 export default function DashboardPage() {
   const [stats, setStats] = useState({
     totalOrders: "0",
     totalUsers: "0",
     totalItems: "0",
+    totalGalleries: "0",
   });
 
   const [recentActivities, setRecentActivities] = useState([]);
@@ -25,7 +27,10 @@ export default function DashboardPage() {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
-        setStats(statsResponse.data);
+        setStats((prev) => ({
+          ...prev,
+          ...statsResponse.data,
+        }));
 
         // Fetch recent activities
         const activitiesResponse = await axios.get(
@@ -43,7 +48,7 @@ export default function DashboardPage() {
         chartInstance.current = new Chart(chartRef.current, {
           type: "bar",
           data: {
-            labels: ["Orders", "Users", "Items"],
+            labels: ["Orders", "Users", "Items", "Galleries"],
             datasets: [
               {
                 label: "Count",
@@ -51,8 +56,9 @@ export default function DashboardPage() {
                   parseInt(statsResponse.data.totalOrders, 10),
                   parseInt(statsResponse.data.totalUsers, 10),
                   parseInt(statsResponse.data.totalItems, 10),
+                  parseInt(statsResponse.data.totalGalleries, 10),
                 ],
-                backgroundColor: ["#4CAF50", "#2196F3", "#FF9800"],
+                backgroundColor: ["#4CAF50", "#2196F3", "#FF9800", "#9C27B0"],
               },
             ],
           },
@@ -79,38 +85,58 @@ export default function DashboardPage() {
   }, []);
 
   return (
-    <div className="w-full h-full p-6">
-      <h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
+    <motion.div
+      className="w-full h-full p-6"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
+      <h1 className="text-3xl font-bold mb-6 text-center">Admin Dashboard</h1>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-3 gap-6">
-        <div className="p-6 bg-white shadow-lg rounded-xl text-center">
-          <h2 className="text-xl font-bold">Total Orders</h2>
-          <p className="text-2xl mt-4">{stats.totalOrders}</p>
-        </div>
-        <div className="p-6 bg-white shadow-lg rounded-xl text-center">
-          <h2 className="text-xl font-bold">Total Users</h2>
-          <p className="text-2xl mt-4">{stats.totalUsers}</p>
-        </div>
-        <div className="p-6 bg-white shadow-lg rounded-xl text-center">
-          <h2 className="text-xl font-bold">Total Items</h2>
-          <p className="text-2xl mt-4">{stats.totalItems}</p>
-        </div>
+      <div className="grid grid-cols-4 gap-6">
+        {[
+          { title: "Total Orders", value: stats.totalOrders, color: "bg-green-500" },
+          { title: "Total Users", value: stats.totalUsers, color: "bg-blue-500" },
+          { title: "Total Items", value: stats.totalItems, color: "bg-orange-500" },
+          { title: "Total Galleries", value: stats.totalGalleries, color: "bg-purple-500" },
+        ].map((stat, index) => (
+          <motion.div
+            key={index}
+            className={`p-6 ${stat.color} text-white shadow-lg rounded-xl text-center`}
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: index * 0.2 }}
+          >
+            <h2 className="text-xl font-bold">{stat.title}</h2>
+            <p className="text-2xl mt-4">{stat.value}</p>
+          </motion.div>
+        ))}
       </div>
 
       {/* Graph */}
-      <div className="mt-8 bg-white shadow-lg rounded-xl p-6">
+      <motion.div
+        className="mt-8 bg-white shadow-lg rounded-xl p-6"
+        initial={{ y: 50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
         <h2 className="text-2xl font-bold mb-4">Overview Chart</h2>
         <canvas ref={chartRef} className="w-full h-64"></canvas>
-      </div>
+      </motion.div>
 
       {/* Recent Activity Section */}
-      <div className="mt-8 bg-white shadow-lg rounded-xl p-6">
+      <motion.div
+        className="mt-8 bg-white shadow-lg rounded-xl p-6"
+        initial={{ y: 50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.7 }}
+      >
         <h2 className="text-2xl font-bold mb-4">Recent Activity</h2>
-        <ul className="list-disc list-inside">
+        <ul className="list-disc list-inside space-y-2">
           {recentActivities.length > 0 ? (
             recentActivities.map((activity, index) => (
-              <li key={index}>
+              <li key={index} className="text-gray-700">
                 {activity.message} -{" "}
                 <span className="text-gray-500 text-sm">
                   {new Date(activity.timestamp).toLocaleString()}
@@ -118,10 +144,22 @@ export default function DashboardPage() {
               </li>
             ))
           ) : (
-            <li>No recent activities available.</li>
+            <li className="text-gray-700">No recent activities available.</li>
           )}
         </ul>
-      </div>
-    </div>
+      </motion.div>
+
+      {/* Footer */}
+      <footer className="mt-8 text-center text-gray-600">
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1 }}
+        >
+          © {new Date().getFullYear()} Admin Dashboard
+        </motion.p>
+      </footer>
+    </motion.div>
   );
 }
+n
