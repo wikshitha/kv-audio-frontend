@@ -4,82 +4,78 @@ import { CiCirclePlus } from "react-icons/ci";
 import { Link, useNavigate } from "react-router-dom";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
 
-
-
 export default function AdminItemsPage() {
 	const [items, setItems] = useState([]);
-	const [itemsLoaded, setItemsLoaded] = useState(false);
-    const navigate = useNavigate()
+	const [loading, setLoading] = useState(true);
+	const navigate = useNavigate();
 
 	useEffect(() => {
-		if (!itemsLoaded) {
-			const token = localStorage.getItem("token");
-			axios
-				.get(`${import.meta.env.VITE_BACKEND_URL}/api/products`, {
+		const fetchItems = async () => {
+			try {
+				const token = localStorage.getItem("token");
+				const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/products`, {
 					headers: { Authorization: `Bearer ${token}` },
-				})
-				.then((res) => {
-					console.log(res.data);
-					setItems(res.data);
-					setItemsLoaded(true);
-				})
-				.catch((err) => {
-					console.error(err);
 				});
-		}
-	}, [itemsLoaded]);
+				setItems(res.data);
+			} catch (error) {
+				console.error("Error fetching items:", error);
+			} finally {
+				setLoading(false);
+			}
+		};
+		if (loading) fetchItems();
+	}, [loading]);
 
-	const handleDelete = (key) => {
+	const handleDelete = async (key) => {
 		if (window.confirm("Are you sure you want to delete this item?")) {
-			setItems(items.filter((item) => item.key !== key));
-			const token = localStorage.getItem("token");
-			axios
-				.delete(`${import.meta.env.VITE_BACKEND_URL}/api/products/${key}`, {
+			try {
+				const token = localStorage.getItem("token");
+				await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/products/${key}`, {
 					headers: { Authorization: `Bearer ${token}` },
-				})
-				.then((res) => {
-					console.log(res.data);
-					setItemsLoaded(false);
-				})
-				.catch((err) => {
-					console.error(err);
 				});
+				setLoading(true);
+			} catch (error) {
+				console.error("Error deleting item:", error);
+			}
 		}
 	};
 
 	return (
-		<div className="w-full h-full p-4 relative flex items-center flex-col">
-			{!itemsLoaded && (
-				<div className="border-4 my-4 border-b-green-500 rounded-full animate-spin bg-0 w-[100px] h-[100px] "></div>
-			)}
-			{itemsLoaded && (
-				<div className="overflow-x-auto ">
-					<table className="w-full max-w-full border border-gray-300 rounded-lg shadow-md bg-white">
-						<thead className="bg-gray-100">
+		<div className="min-h-screen bg-gray-100 p-6">
+			<h1 className="text-3xl font-bold text-gray-700 mb-6">Manage Items</h1>
+
+			{loading ? (
+				<div className="flex justify-center items-center h-40">
+					<div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+				</div>
+			) : items.length > 0 ? (
+				<div className="overflow-x-auto bg-white rounded-lg shadow-md p-4">
+					<table className="min-w-full table-auto border-collapse border border-gray-300">
+						<thead className="bg-blue-100">
 							<tr className="text-left text-gray-700">
-								<th className="p-3 border">Key</th>
-								<th className="p-3 border">Name</th>
-								<th className="p-3 border">Price</th>
-								<th className="p-3 border">Category</th>
-								<th className="p-3 border">Dimensions</th>
-								<th className="p-3 border">Availability</th>
-								<th className="p-3 border text-center">Actions</th>
+								<th className="px-6 py-3 font-medium">Key</th>
+								<th className="px-6 py-3 font-medium">Name</th>
+								<th className="px-6 py-3 font-medium">Price</th>
+								<th className="px-6 py-3 font-medium">Category</th>
+								<th className="px-6 py-3 font-medium">Dimensions</th>
+								<th className="px-6 py-3 font-medium">Availability</th>
+								<th className="px-6 py-3 font-medium text-center">Actions</th>
 							</tr>
 						</thead>
 						<tbody>
 							{items.map((product, index) => (
 								<tr
 									key={product.key}
-									className={`border ${
+									className={`${
 										index % 2 === 0 ? "bg-gray-50" : "bg-white"
-									} hover:bg-gray-200 transition-all`}
+									} hover:bg-gray-100 transition-all`}
 								>
-									<td className="p-3 border">{product.key}</td>
-									<td className="p-3 border">{product.name}</td>
-									<td className="p-3 border">${product.price.toFixed(2)}</td>
-									<td className="p-3 border">{product.category}</td>
-									<td className="p-3 border">{product.dimensions}</td>
-									<td className="p-3 border">
+									<td className="px-6 py-3">{product.key}</td>
+									<td className="px-6 py-3">{product.name}</td>
+									<td className="px-6 py-3">${product.price.toFixed(2)}</td>
+									<td className="px-6 py-3">{product.category}</td>
+									<td className="px-6 py-3">{product.dimensions}</td>
+									<td className="px-6 py-3">
 										<span
 											className={`px-2 py-1 rounded text-sm font-medium ${
 												product.availability
@@ -90,19 +86,20 @@ export default function AdminItemsPage() {
 											{product.availability ? "Available" : "Not Available"}
 										</span>
 									</td>
-									<td className="p-3 border flex justify-center gap-3">
-										<button 
-                                            onClick={()=>{
-                                                navigate(`/admin/items/edit`, {state:product} )
-                                            }} className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition">
-											<FaEdit className="inline mr-1" /> Edit
+									<td className="px-6 py-3 flex justify-center gap-3">
+										<button
+											onClick={() => navigate(`/admin/items/edit`, { state: product })}
+											className="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 transition-all"
+										>
+											<FaEdit className="inline mr-2" />
+											Edit
 										</button>
-
 										<button
 											onClick={() => handleDelete(product.key)}
-											className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 transition"
+											className="bg-red-600 text-white px-4 py-2 rounded-lg shadow hover:bg-red-700 transition-all"
 										>
-											<FaTrashAlt className="inline mr-1" /> Delete
+											<FaTrashAlt className="inline mr-2" />
+											Delete
 										</button>
 									</td>
 								</tr>
@@ -110,10 +107,15 @@ export default function AdminItemsPage() {
 						</tbody>
 					</table>
 				</div>
+			) : (
+				<p className="text-gray-600 text-center">No items found. Add new items to get started!</p>
 			)}
 
-			<Link to="/admin/items/add" className="fixed bottom-6 right-6">
-				<CiCirclePlus className="text-[70px] text-blue-600 hover:text-red-900 transition duration-200 cursor-pointer" />
+			<Link
+				to="/admin/items/add"
+				className="fixed bottom-6 right-6 bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 transition-all"
+			>
+				<CiCirclePlus className="text-4xl" />
 			</Link>
 		</div>
 	);
