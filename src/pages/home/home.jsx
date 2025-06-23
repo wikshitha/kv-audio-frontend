@@ -8,19 +8,19 @@ const Home = () => {
   const [error, setError] = useState(null);
   const [newReview, setNewReview] = useState({ coment: "", rating: "" });
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [currentUserEmail, setCurrentUserEmail] = useState(null); // State for storing user email
+  const [currentUserEmail, setCurrentUserEmail] = useState(null);
 
   const parseJWT = (token) => {
     try {
-      const base64Url = token.split(".")[1]; // Get the payload part of the token
-      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/"); // Fix Base64 encoding
+      const base64Url = token.split(".")[1];
+      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
       const jsonPayload = decodeURIComponent(
         atob(base64)
           .split("")
           .map((c) => `%${("00" + c.charCodeAt(0).toString(16)).slice(-2)}`)
           .join("")
       );
-      return JSON.parse(jsonPayload); // Parse JSON payload
+      return JSON.parse(jsonPayload);
     } catch (err) {
       console.error("Failed to parse token:", err);
       return null;
@@ -28,19 +28,18 @@ const Home = () => {
   };
 
   useEffect(() => {
-    const token = localStorage.getItem("token"); // Get the token from localStorage
-
+    const token = localStorage.getItem("token");
     if (token) {
-      const decoded = parseJWT(token); // Decode the token manually
+      const decoded = parseJWT(token);
       if (decoded && decoded.email) {
-        setCurrentUserEmail(decoded.email); // Set the user's email from the decoded token
+        setCurrentUserEmail(decoded.email);
       }
     }
 
     axios
       .get(`${import.meta.env.VITE_BACKEND_URL}/api/reviews`)
       .then((res) => {
-        setReviews(res.data.filter((review) => review.isApproved)); // Fetch only approved reviews
+        setReviews(res.data.filter((review) => review.isApproved));
         setIsLoading(false);
       })
       .catch((error) => {
@@ -51,8 +50,7 @@ const Home = () => {
   }, []);
 
   const addReview = () => {
-    const token = localStorage.getItem("token"); // Get the token from localStorage
-
+    const token = localStorage.getItem("token");
     if (!token) {
       alert("You must be logged in to submit a review.");
       return;
@@ -64,7 +62,7 @@ const Home = () => {
         newReview,
         {
           headers: {
-            Authorization: `Bearer ${token}`, // Add token to Authorization header
+            Authorization: `Bearer ${token}`,
           },
         }
       )
@@ -73,7 +71,7 @@ const Home = () => {
         setNewReview({ coment: "", rating: "" });
         setIsModalOpen(false);
         setIsLoading(true);
-        setReviews([...reviews, res.data.review]); // Update the UI with the new review
+        setReviews([...reviews, res.data.review]);
       })
       .catch((error) => {
         console.error("Failed to add review:", error);
@@ -81,52 +79,88 @@ const Home = () => {
       });
   };
 
-  function deleteReview(email) {
+  const deleteReview = (email) => {
     const token = localStorage.getItem("token");
-
     if (!token) {
       alert("You must be logged in to delete a review.");
       return;
     }
-    
 
-    axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/reviews/${email}`, {
+    axios
+      .delete(`${import.meta.env.VITE_BACKEND_URL}/api/reviews/${email}`, {
         headers: {
-            Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
-    })
-    .then(() => {
+      })
+      .then(() => {
         console.log("Review deleted successfully");
-        setIsModalOpen(false);
-        setReviews(reviews.filter((review) => review.email !== email)); // Update the UI after deletion
+        setReviews(reviews.filter((review) => review.email !== email));
         setIsLoading(true);
-    })
-    .catch((err) => {
+      })
+      .catch((err) => {
         console.error("Error deleting review:", err);
-    });
-}
+      });
+  };
 
   return (
     <div className="w-full h-full flex flex-col">
       {/* Hero Section */}
       <section
-        className="w-full h-[70vh] flex items-center justify-center bg-cover bg-center transition-all duration-700"
+        className="w-full h-[70vh] flex items-center justify-center bg-cover bg-center"
         style={{ backgroundImage: "url('/assets/hero-audio.jpg')" }}
       >
-        <div className="text-center text-white bg-black bg-opacity-50 p-8 rounded-lg animate-fade-in">
+        <div className="text-center text-white bg-black bg-opacity-50 p-8 rounded-lg">
           <h1 className="text-4xl font-bold mb-4">Rent Premium Audio Equipment</h1>
-          <p className="mb-6">Affordable prices, flexible terms, and top-quality gear for all your audio needs.</p>
+          <p className="mb-6">
+            Affordable prices, flexible terms, and top-quality gear for all your audio needs.
+          </p>
           <Link
             to="/items"
-            className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg shadow-lg transform hover:scale-105 transition-transform"
+            className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg shadow-lg"
           >
             Explore Items
           </Link>
         </div>
       </section>
 
-      {/* Testimonials Section */}
-      <section className="w-full py-12 bg-white">
+      {/* About Us Section */}
+      <section className="py-12 bg-gray-50 text-center">
+        <h2 className="text-3xl font-bold mb-4">About Us</h2>
+        <p className="text-gray-600 max-w-3xl mx-auto">
+          At AudioRental, we aim to revolutionize the way you access high-quality audio equipment.
+          Whether you're hosting an event, recording a session, or simply enjoying music, we have
+          the perfect solution for you. Our mission is to provide exceptional service with a
+          customer-first approach.
+        </p>
+      </section>
+
+      {/* Services Section */}
+      <section className="py-12 bg-white">
+        <h2 className="text-3xl font-bold text-center mb-8">Our Services</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 px-4">
+          <div className="bg-gray-100 p-6 rounded-lg shadow-lg text-center">
+            <h3 className="text-xl font-semibold mb-4">Audio Equipment Rental</h3>
+            <p className="text-gray-600">
+              Rent top-notch audio equipment for events, studios, and personal use.
+            </p>
+          </div>
+          <div className="bg-gray-100 p-6 rounded-lg shadow-lg text-center">
+            <h3 className="text-xl font-semibold mb-4">Event Support</h3>
+            <p className="text-gray-600">
+              Get professional assistance for your events to ensure flawless audio performance.
+            </p>
+          </div>
+          <div className="bg-gray-100 p-6 rounded-lg shadow-lg text-center">
+            <h3 className="text-xl font-semibold mb-4">Custom Packages</h3>
+            <p className="text-gray-600">
+              Choose from flexible rental packages tailored to your specific needs.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Reviews Section */}
+      <section className="py-12 bg-gray-50">
         <h2 className="text-3xl font-bold text-center mb-8">What Our Customers Say</h2>
         {isLoading ? (
           <p className="text-center text-gray-500">Loading reviews...</p>
@@ -167,90 +201,164 @@ const Home = () => {
             )}
           </div>
         )}
+
+        {/* Add Review Button */}
+        <div className="w-full flex justify-center py-4">
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg shadow-lg"
+          >
+            Add Your Review
+          </button>
+        </div>
+
+        {/* Add Review Modal */}
+        {isModalOpen && (
+          <div className="fixed inset-0 bg-[#00000075] bg-opacity-50 flex justify-center items-center z-50">
+            <div className="bg-white rounded-lg shadow-lg p-6 w-96 relative">
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="absolute top-2 right-2 text-gray-500 hover:text-red-500 text-xl"
+              >
+                &times;
+              </button>
+              <h2 className="text-2xl font-bold text-center mb-4">Add Your Review</h2>
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  addReview();
+                }}
+              >
+                <textarea
+                  name="coment"
+                  placeholder="Write your review here..."
+                  className="w-full p-3 border rounded-lg mb-4"
+                  value={newReview.coment}
+                  onChange={(e) =>
+                    setNewReview({ ...newReview, coment: e.target.value })
+                  }
+                  required
+                ></textarea>
+                <select
+                  name="rating"
+                  className="w-full p-3 border rounded-lg mb-4"
+                  value={newReview.rating}
+                  onChange={(e) =>
+                    setNewReview({ ...newReview, rating: e.target.value })
+                  }
+                  required
+                >
+                  <option value="">Select a rating</option>
+                  {[...Array(5).keys()].map((num) => (
+                    <option key={num + 1} value={num + 1}>
+                      {num + 1} Star{num > 0 && "s"}
+                    </option>
+                  ))}
+                </select>
+                <button
+                  type="submit"
+                  className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg shadow-lg w-full"
+                >
+                  Submit Review
+                </button>
+              </form>
+            </div>
+          </div>
+        )}
       </section>
 
-      {/* Add Review Button */}
-      <div className="w-full flex justify-center py-4">
-        <button
-          onClick={() => setIsModalOpen(true)}
-          className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg shadow-lg"
-        >
-          Add Your Review
-        </button>
-      </div>
-
-      {/* Add Review Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-[#00000075] bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white rounded-lg shadow-lg p-6 w-96 relative">
-            <button
-              onClick={() => setIsModalOpen(false)}
-              className="absolute top-2 right-2 text-gray-500 hover:text-red-500 text-xl"
-            >
-              &times;
-            </button>
-            <h2 className="text-2xl font-bold text-center mb-4">Add Your Review</h2>
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                addReview();
-              }}
-            >
-              <textarea
-                name="coment"
-                placeholder="Write your review here..."
-                className="w-full p-3 border rounded-lg mb-4"
-                value={newReview.coment}
-                onChange={(e) => setNewReview({ ...newReview, coment: e.target.value })}
-                required
-              ></textarea>
-              <select
-                name="rating"
-                className="w-full p-3 border rounded-lg mb-4"
-                value={newReview.rating}
-                onChange={(e) => setNewReview({ ...newReview, rating: e.target.value })}
-                required
-              >
-                <option value="">Select a rating</option>
-                {[...Array(5).keys()].map((num) => (
-                  <option key={num + 1} value={num + 1}>
-                    {num + 1} Star{num > 0 && "s"}
-                  </option>
-                ))}
-              </select>
-              <button
-                type="submit"
-                className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg shadow-lg w-full"
-              >
-                Submit Review
-              </button>
-            </form>
-          </div>
+      {/* Gallery Section */}
+      <section className="py-12 bg-white">
+        <h2 className="text-3xl font-bold text-center mb-8">Gallery</h2>
+        <p className="text-center text-gray-600 mb-8">
+          View our curated collection of audio equipment used by our satisfied customers.
+        </p>
+        <div className="flex justify-center">
+          <Link
+            to="/gallery"
+            className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-6 rounded-lg shadow-lg"
+          >
+            View Gallery
+          </Link>
         </div>
-      )}
+      </section>
 
-      {/* How It Works Section */}
-      <section className="w-full py-12 bg-gray-100">
-        <h2 className="text-3xl font-bold text-center mb-8">How It Works</h2>
-        <div className="flex flex-wrap justify-center gap-6 px-4">
-          <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm text-center">
-            <h3 className="text-xl font-semibold mb-4">1. Browse</h3>
-            <p>Explore our wide range of audio equipment to find what you need.</p>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm text-center">
-            <h3 className="text-xl font-semibold mb-4">2. Rent</h3>
-            <p>Choose your items and rental period, then place your order.</p>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm text-center">
-            <h3 className="text-xl font-semibold mb-4">3. Enjoy</h3>
-            <p>Pick up or have your gear delivered, and make your event a success.</p>
-          </div>
+      {/* Contact Section */}
+      <section className="py-12 bg-gray-50">
+        <h2 className="text-3xl font-bold text-center mb-8">Contact Us</h2>
+        <p className="text-center text-gray-600 mb-8">
+          Have questions? Need assistance? We're here to help!
+        </p>
+        <div className="flex justify-center">
+          <Link
+            to="/contact"
+            className="bg-purple-500 hover:bg-purple-600 text-white py-2 px-6 rounded-lg shadow-lg"
+          >
+            Get in Touch
+          </Link>
+        </div>
+      </section>
+
+      {/* Subscription Section */}
+      <section className="py-12 bg-blue-500 text-white text-center">
+        <h2 className="text-3xl font-bold mb-4">Subscribe to Our Newsletter</h2>
+        <p className="mb-6">Stay updated with the latest deals and promotions.</p>
+        <div className="flex justify-center">
+          <input
+            type="email"
+            placeholder="Enter your email"
+            className="p-2 rounded-l-lg"
+          />
+          <button className="bg-green-500 hover:bg-green-600 py-2 px-4 rounded-r-lg">
+            Subscribe
+          </button>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="w-full bg-gray-800 text-white py-4 flex justify-center items-center">
-        <p className="text-sm">&copy; 2025 AudioRental. All rights reserved.</p>
+      <footer className="w-full bg-gray-800 text-white py-8">
+        <div className="max-w-screen-xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div>
+            <h3 className="font-bold text-lg">Quick Links</h3>
+            <ul className="mt-4 space-y-2">
+              <li>
+                <Link to="/" className="hover:underline">
+                  Home
+                </Link>
+              </li>
+              <li>
+                <Link to="/items" className="hover:underline">
+                  Items
+                </Link>
+              </li>
+              <li>
+                <Link to="/contact" className="hover:underline">
+                  Contact Us
+                </Link>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3 className="font-bold text-lg">Contact Info</h3>
+            <p className="mt-4">Email: contact@audiorental.com</p>
+            <p>Phone: +1 123-456-7890</p>
+          </div>
+          <div>
+            <h3 className="font-bold text-lg">Follow Us</h3>
+            <div className="flex mt-4 space-x-4">
+              <a href="#" className="hover:underline">
+                Facebook
+              </a>
+              <a href="#" className="hover:underline">
+                Twitter
+              </a>
+              <a href="#" className="hover:underline">
+                Instagram
+              </a>
+            </div>
+          </div>
+        </div>
+        <div className="text-center mt-8">© 2025 AudioRental. All rights reserved.</div>
       </footer>
     </div>
   );
