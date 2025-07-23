@@ -95,8 +95,21 @@ export default function AddItemPage() {
                     className="border p-2 rounded"
                 >
                     <option value="" disabled>Select Product Type</option>
-                    <option value="audio">Audio</option>
-                    <option value="lights">Lights</option>
+                    <option value="pa_speakers">PA Speakers</option>
+                    <option value="monitor_speakers">Monitor Speakers</option>
+                    <option value="bluetooth_speakers">Bluetooth Speakers</option>
+                    <option value="wired_microphone">Wired Microphone</option>
+                    <option value="wireless_microphone">Wireless Microphone</option>
+                    <option value="mixer">Audio Mixer</option>
+                    <option value="dj_mixer">DJ Mixer</option>
+                    <option value="power_cables">Power Cables</option>
+                    <option value="adaptor">Adaptors & Converters</option>
+                    <option value="mic_stands">Mic Stands</option>
+                    <option value="studio_headphones">Studio Headphones</option>
+                    <option value="dj_headphones">DJ Headphones</option>
+                    <option value="stage_lights">Stage Lights</option>
+                    <option value="fog_machine">Smoke/Fog Machines</option>
+                    <option value="laser_lights">Laser Lights</option>
                 </select>
                 <input
                     type="text"
