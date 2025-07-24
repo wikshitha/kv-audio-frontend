@@ -72,7 +72,7 @@ export default function AdminItemsPage() {
 								>
 									<td className="px-6 py-3">{product.key}</td>
 									<td className="px-6 py-3">{product.name}</td>
-									<td className="px-6 py-3">${product.price.toFixed(2)}</td>
+									<td className="px-6 py-3">LKR {product.price.toFixed(2)}</td>
 									<td className="px-6 py-3">{product.category}</td>
 									<td className="px-6 py-3">{product.dimensions}</td>
 									<td className="px-6 py-3">

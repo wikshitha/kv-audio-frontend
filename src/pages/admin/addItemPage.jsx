@@ -98,6 +98,7 @@ export default function AddItemPage() {
                     <option value="pa_speakers">PA Speakers</option>
                     <option value="monitor_speakers">Monitor Speakers</option>
                     <option value="bluetooth_speakers">Bluetooth Speakers</option>
+                    <option value="subwoofer">Subwoofer</option>
                     <option value="wired_microphone">Wired Microphone</option>
                     <option value="wireless_microphone">Wireless Microphone</option>
                     <option value="mixer">Audio Mixer</option>
