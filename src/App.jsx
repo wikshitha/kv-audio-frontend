@@ -1,5 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom"
-import Adminpage from "./pages/admin/addminpage.jsx"
+import Adminpage from "./pages/admin/adminpage.jsx"
 import HomePage from "./pages/home/homePage.jsx"
 import Testing from "./components/testing.jsx"
 import LoginPage from "./pages/login/login.jsx"

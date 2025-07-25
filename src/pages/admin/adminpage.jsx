@@ -1,7 +1,8 @@
 import { FaRegBookmark, FaRegUser, FaRegStar } from "react-icons/fa";
+import { FiMessageSquare } from "react-icons/fi";
 import { GoGraph } from "react-icons/go";
 import { LuSpeaker } from "react-icons/lu";
-import { MdPhotoLibrary } from "react-icons/md"; // Icon for gallery
+import { MdPhotoLibrary } from "react-icons/md"; 
 import { Link, Route, Routes } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -12,9 +13,10 @@ import UpdateItemPage from "./updateItemPage";
 import AdminUsersPage from "./adminUsersPage";
 import AdminOrdersPage from "./adminOrdersPage";
 import AdminReviewsPage from "./adminReviewsPage";
-import AdminGalleryPage from "./adminGalleryPage"; // Import the new page
+import AdminGalleryPage from "./adminGalleryPage"; 
 import DashboardPage from "./dashboard";
 import AddGalleriesPage from "./addGalleriesPage";
+import AdminMessagesPage from "./adminmessages";
 
 export default function Adminpage() {
   const [userValidated, setUserValidated] = useState(false);
@@ -53,6 +55,7 @@ export default function Adminpage() {
           <SidebarLink to="/admin/users" icon={<FaRegUser />} label="Users" />
           <SidebarLink to="/admin/reviews" icon={<FaRegStar />} label="Reviews" />
           <SidebarLink to="/admin/gallery" icon={<MdPhotoLibrary />} label="Gallery" />
+          <SidebarLink to="/admin/messages" icon={<FiMessageSquare />} label="Messages" />
         </nav>
       </div>
 
@@ -68,6 +71,7 @@ export default function Adminpage() {
             <Route path="/reviews" element={<AdminReviewsPage />} />
             <Route path="/gallery" element={<AdminGalleryPage />} />
             <Route path="/gallery/add" element={<AddGalleriesPage />} />
+            <Route path="/messages" element={<AdminMessagesPage />} />
             <Route path="/" element={<DashboardPage />} />
           </Routes>
         )}

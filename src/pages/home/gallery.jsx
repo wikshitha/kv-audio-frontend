@@ -3,10 +3,9 @@ import { useState, useEffect } from "react";
 import GalleryCard from "../../components/galleryCard";
 
 export default function GalleryPage() {
-  const [state, setState] = useState("loading"); // loading, success, error
+  const [state, setState] = useState("loading");
   const [galleries, setGalleries] = useState([]);
 
-  // Fetch Galleries
   useEffect(() => {
     fetchGalleries();
   }, []);
@@ -24,38 +23,42 @@ export default function GalleryPage() {
   };
 
   return (
-    <div className="w-full p-6">
-      <h1 className="text-4xl font-extrabold mb-6 text-center text-blue-600">Gallery Showcase</h1>
-      <p className="text-center text-gray-600 mb-8">
-        Explore our curated collection of images and descriptions from our gallery. Discover the beauty and uniqueness captured in each piece.
-      </p>
+    <div className="w-full min-h-screen bg-white px-6 py-12">
+      <div className="max-w-5xl mx-auto text-center">
+        <h2 className="text-3xl font-bold text-center text-gray-800 mb-2">Gallery Showcase</h2>
+        <p className="text-gray-600 text-lg">
+          Browse through our beautiful collection of past events, special moments, and highlights from our journey. Each image tells a story — from vibrant audio setups and event decorations to unforgettable gatherings captured in time.
+        </p>
+      </div>
 
-      {/* State Handling */}
+      {/* Loading Spinner */}
       {state === "loading" && (
         <div className="flex justify-center items-center h-64">
-          <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+          <div className="w-12 h-12 border-4 border-actiion border-t-transparent rounded-full animate-spin"></div>
         </div>
       )}
 
+      {/* Error Message */}
       {state === "error" && (
-        <p className="text-center text-red-500">
-          Failed to load galleries. Please refresh the page or try again later.
-        </p>
+        <div className="text-center mt-10 text-red-600 font-medium text-lg">
+          Oops! We couldn't load the gallery. Please try refreshing the page or come back later.
+        </div>
       )}
 
-      {/* Display Galleries */}
-      {state === "success" && (
-        <>
-          {galleries.length === 0 ? (
-            <p className="text-center text-gray-500">No galleries available at the moment.</p>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {galleries.map((gallery) => (
-                <GalleryCard key={gallery.key} gallery={gallery} />
-              ))}
-            </div>
-          )}
-        </>
+      {/* No Galleries */}
+      {state === "success" && galleries.length === 0 && (
+        <div className="text-center mt-10 text-gray-500 text-lg">
+          No gallery entries available right now. Stay tuned for upcoming events!
+        </div>
+      )}
+
+      {/* Gallery Grid */}
+      {state === "success" && galleries.length > 0 && (
+        <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          {galleries.map((gallery) => (
+            <GalleryCard key={gallery.key} gallery={gallery} />
+          ))}
+        </div>
       )}
     </div>
   );
