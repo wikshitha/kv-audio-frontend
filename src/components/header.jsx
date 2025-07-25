@@ -12,9 +12,9 @@ export default function Header() {
             <img src="/logo.png" alt="logo" className="w-[60px] h-[60px] object-cover border -3 absolute right-2 md:left-2 rounded-full" />
             <div className="hidden w-[600px] md:flex justify-evenly items-center">
             <Link to ="/" className="hidden text-[22px] font-bold m-1 md:block">Home</Link>
-            <Link to ="/contact" className="hidden text-[22px] font-bold m-1 md:block">Contact</Link>
-            <Link to="/gallery" className="hidden text-[22px] font-bold m-1 md:block">Gallery</Link>
             <Link to ="/items" className="hidden text-[22px] font-bold m-1 md:block">Items</Link>
+            <Link to="/gallery" className="hidden text-[22px] font-bold m-1 md:block">Gallery</Link>
+            <Link to ="/contact" className="hidden text-[22px] font-bold m-1 md:block">Contact</Link>
             </div>
             <Link to ="/booking" className="hidden text-[25px] font-bold m-1 absolute right-25 md:block"><FaCartShopping/></Link>
             

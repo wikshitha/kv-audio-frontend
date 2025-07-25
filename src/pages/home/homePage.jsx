@@ -12,7 +12,7 @@ export default function HomePage() {
     return (
         <>
             <Header />
-            <div className="w-full h-[calc(100vh-100px)] bg-primary">
+            <div className="w-full min-h-screen bg-primary pt-[100px]">
                 <Routes path="/*">
                 <Route path="/items" element={<Items/>}/>
                 <Route path="/contact" element={<Contact/>}/>

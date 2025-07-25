@@ -107,7 +107,7 @@ const Home = () => {
       {/* Hero Section */}
       <section
         className="w-full h-[70vh] flex items-center justify-center bg-cover bg-center"
-        style={{ backgroundImage: "url('/assets/hero-audio.jpg')" }}
+        style={{ backgroundImage: "url('/public/bghome.jpg')" }}
       >
         <div className="text-center text-white bg-black bg-opacity-50 p-8 rounded-lg">
           <h1 className="text-4xl font-bold mb-4">Rent Premium Audio Equipment</h1>
