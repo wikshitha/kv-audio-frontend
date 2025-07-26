@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { FaStar, FaRegStar } from "react-icons/fa";
+import Footer from "../../components/footer";
 
-const Home = () => {
+export default function Home() {
   const [reviews, setReviews] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -57,15 +59,11 @@ const Home = () => {
     }
 
     axios
-      .post(
-        `${import.meta.env.VITE_BACKEND_URL}/api/reviews`,
-        newReview,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
+      .post(`${import.meta.env.VITE_BACKEND_URL}/api/reviews`, newReview, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((res) => {
         alert(res.data.message);
         setNewReview({ coment: "", rating: "" });
@@ -102,94 +100,184 @@ const Home = () => {
       });
   };
 
+  // Helper for star rating rendering
+  const renderStars = (rating) => {
+    const stars = [];
+    for (let i = 1; i <= 5; i++) {
+      stars.push(
+        i <= rating ? (
+          <FaStar key={i} className="inline-block text-yellow-400" />
+        ) : (
+          <FaRegStar key={i} className="inline-block text-yellow-400" />
+        )
+      );
+    }
+    return stars;
+  };
+
   return (
-    <div className="w-full h-full flex flex-col">
+    <div className="w-full min-h-screen flex flex-col font-sans bg-gray-50 text-gray-800">
       {/* Hero Section */}
       <section
-        className="w-full h-[70vh] flex items-center justify-center bg-cover bg-center"
-        style={{ backgroundImage: "url('/public/bghome.jpg')" }}
+        className="relative w-full h-[75vh] flex items-center justify-center bg-cover bg-center"
+        style={{ backgroundImage: "url('/bghome.jpg')" }}
       >
-        <div className="text-center text-white bg-black bg-opacity-50 p-8 rounded-lg">
-          <h1 className="text-4xl font-bold mb-4">Rent Premium Audio Equipment</h1>
-          <p className="mb-6">
+        <div className="absolute inset-0 bg-gradient-to-r from-black via-transparent to-black opacity-70"></div>
+        <div className="relative z-10 text-center max-w-3xl px-6">
+          <h1 className="text-5xl md:text-6xl font-extrabold text-white drop-shadow-lg mb-6">
+            Rent Premium Audio Equipment
+          </h1>
+          <p className="text-lg md:text-xl text-gray-200 mb-8 leading-relaxed">
             Affordable prices, flexible terms, and top-quality gear for all your audio needs.
           </p>
-          <Link
-            to="/items"
-            className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg shadow-lg"
-          >
-            Explore Items
-          </Link>
+          <div className="flex justify-center gap-6">
+            <Link
+              to="/items"
+              className="bg-green-500 hover:bg-green-600 transition duration-300 text-white py-3 px-8 rounded-lg font-semibold shadow-lg shadow-green-400/50"
+            >
+              Explore Items
+            </Link>
+            <a
+              href="#reviews"
+              className="border border-white text-white hover:bg-white hover:text-green-600 transition duration-300 py-3 px-8 rounded-lg font-semibold"
+            >
+              See Reviews
+            </a>
+          </div>
         </div>
       </section>
 
       {/* About Us Section */}
-      <section className="py-12 bg-gray-50 text-center">
-        <h2 className="text-3xl font-bold mb-4">About Us</h2>
-        <p className="text-gray-600 max-w-3xl mx-auto">
+      <section className="py-16 bg-white text-center max-w-5xl mx-auto px-6">
+        <h2 className="text-4xl font-extrabold mb-6 text-gray-900">Why Choose Us</h2>
+        <p className="text-gray-600 text-lg max-w-4xl mx-auto leading-relaxed">
           At AudioRental, we aim to revolutionize the way you access high-quality audio equipment.
-          Whether you're hosting an event, recording a session, or simply enjoying music, we have
-          the perfect solution for you. Our mission is to provide exceptional service with a
-          customer-first approach.
+          Whether you're hosting an event, recording a session, or simply enjoying music, we have the
+          perfect solution for you. Our mission is to provide exceptional service with a customer-first
+          approach. Our gear is maintained to the highest standards and ready to make your event sound
+          spectacular.
         </p>
       </section>
 
       {/* Services Section */}
-      <section className="py-12 bg-white">
-        <h2 className="text-3xl font-bold text-center mb-8">Our Services</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 px-4">
-          <div className="bg-gray-100 p-6 rounded-lg shadow-lg text-center">
-            <h3 className="text-xl font-semibold mb-4">Audio Equipment Rental</h3>
-            <p className="text-gray-600">
-              Rent top-notch audio equipment for events, studios, and personal use.
-            </p>
-          </div>
-          <div className="bg-gray-100 p-6 rounded-lg shadow-lg text-center">
-            <h3 className="text-xl font-semibold mb-4">Event Support</h3>
-            <p className="text-gray-600">
-              Get professional assistance for your events to ensure flawless audio performance.
-            </p>
-          </div>
-          <div className="bg-gray-100 p-6 rounded-lg shadow-lg text-center">
-            <h3 className="text-xl font-semibold mb-4">Custom Packages</h3>
-            <p className="text-gray-600">
-              Choose from flexible rental packages tailored to your specific needs.
-            </p>
-          </div>
+      <section className="py-16 bg-gradient-to-tr from-green-50 to-green-100">
+        <h2 className="text-4xl font-extrabold text-center mb-12 text-green-900">Our Services</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 max-w-6xl mx-auto px-6">
+          {[
+            {
+              title: "Audio Equipment Rental",
+              desc: "Rent top-notch audio equipment for events, studios, and personal use.",
+              icon: (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-12 w-12 mx-auto mb-4 text-green-600"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M9.75 17L6 13.5l3.75-3.75M16.5 7.5l3.75 3.75-3.75 3.75"
+                  />
+                </svg>
+              ),
+            },
+            {
+              title: "Event Support",
+              desc: "Get professional assistance for your events to ensure flawless audio performance.",
+              icon: (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-12 w-12 mx-auto mb-4 text-green-600"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M7 8h10M7 12h8m-6 4h6"
+                  />
+                </svg>
+              ),
+            },
+            {
+              title: "Custom Packages",
+              desc: "Choose from flexible rental packages tailored to your specific needs.",
+              icon: (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-12 w-12 mx-auto mb-4 text-green-600"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M4 6h16M4 12h8m-8 6h16"
+                  />
+                </svg>
+              ),
+            },
+          ].map(({ title, desc, icon }) => (
+            <div
+              key={title}
+              className="bg-white p-8 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300"
+            >
+              {icon}
+              <h3 className="text-xl font-semibold mb-3 text-green-900">{title}</h3>
+              <p className="text-gray-700">{desc}</p>
+            </div>
+          ))}
         </div>
       </section>
 
       {/* Reviews Section */}
-      <section className="py-12 bg-gray-50">
-        <h2 className="text-3xl font-bold text-center mb-8">What Our Customers Say</h2>
+      <section id="reviews" className="py-16 bg-white max-w-6xl mx-auto px-6">
+        <h2 className="text-4xl font-extrabold text-center mb-12 text-gray-900">
+          What Our Customers Say
+        </h2>
         {isLoading ? (
           <p className="text-center text-gray-500">Loading reviews...</p>
         ) : error ? (
           <p className="text-center text-red-500">{error}</p>
         ) : (
-          <div className="flex flex-wrap justify-center gap-6 px-4">
+          <div className="flex flex-wrap justify-center gap-8">
             {reviews.length > 0 ? (
               reviews.map((review) => (
                 <div
                   key={review._id}
-                  className="bg-gray-100 p-6 rounded-lg shadow-lg max-w-sm text-center"
+                  className="bg-green-50 p-6 rounded-xl shadow-md max-w-sm w-full flex flex-col items-center text-center"
                 >
                   <img
-                    src={review.profilePic}
+                    src={review.profilePic || "/default-avatar.png"}
                     alt={`${review.name}'s profile`}
-                    className="w-16 h-16 rounded-full mx-auto mb-4"
+                    className="w-20 h-20 rounded-full object-cover mb-4 border-4 border-green-400"
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = "/default-avatar.png";
+                    }}
                   />
-                  <p className="italic">"{review.coment}"</p>
-                  <div className="mt-2 text-yellow-500">
-                    {"★".repeat(review.rating) + "☆".repeat(5 - review.rating)}
-                  </div>
-                  <h4 className="font-bold mt-4">- {review.name}</h4>
+                  <p className="italic text-gray-800 mb-4">"{review.coment}"</p>
+                  <div className="text-yellow-500 mb-3">{renderStars(review.rating)}</div>
+                  <h4 className="font-semibold text-green-900 mb-2">- {review.name}</h4>
+                  {/* Optional: Show date or location if available */}
+                  {review.date && (
+                    <p className="text-sm text-gray-500 mb-4">
+                      Reviewed on {new Date(review.date).toLocaleDateString()}
+                    </p>
+                  )}
 
                   {/* Delete button for review owner */}
                   {review.email === currentUserEmail && (
                     <button
                       onClick={() => deleteReview(review.email)}
-                      className="bg-red-500 text-white px-4 py-2 rounded-lg mt-4"
+                      className="bg-red-500 text-white px-4 py-2 rounded-lg mt-auto hover:bg-red-600 transition"
                     >
                       Delete
                     </button>
@@ -203,10 +291,10 @@ const Home = () => {
         )}
 
         {/* Add Review Button */}
-        <div className="w-full flex justify-center py-4">
+        <div className="w-full flex justify-center mt-12">
           <button
             onClick={() => setIsModalOpen(true)}
-            className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg shadow-lg"
+            className="bg-green-600 hover:bg-green-700 text-white py-3 px-8 rounded-lg shadow-lg font-semibold transition"
           >
             Add Your Review
           </button>
@@ -214,15 +302,15 @@ const Home = () => {
 
         {/* Add Review Modal */}
         {isModalOpen && (
-          <div className="fixed inset-0 bg-[#00000075] bg-opacity-50 flex justify-center items-center z-50">
-            <div className="bg-white rounded-lg shadow-lg p-6 w-96 relative">
+          <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50">
+            <div className="bg-white rounded-xl shadow-xl p-8 w-96 relative max-w-full mx-4">
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="absolute top-2 right-2 text-gray-500 hover:text-red-500 text-xl"
+                className="absolute top-3 right-4 text-gray-500 hover:text-red-600 text-3xl font-bold leading-none"
               >
                 &times;
               </button>
-              <h2 className="text-2xl font-bold text-center mb-4">Add Your Review</h2>
+              <h2 className="text-3xl font-bold text-center mb-6">Add Your Review</h2>
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
@@ -232,32 +320,29 @@ const Home = () => {
                 <textarea
                   name="coment"
                   placeholder="Write your review here..."
-                  className="w-full p-3 border rounded-lg mb-4"
+                  className="w-full p-4 border border-gray-300 rounded-lg mb-5 resize-none focus:outline-green-500 focus:ring-2 focus:ring-green-300"
+                  rows={5}
                   value={newReview.coment}
-                  onChange={(e) =>
-                    setNewReview({ ...newReview, coment: e.target.value })
-                  }
+                  onChange={(e) => setNewReview({ ...newReview, coment: e.target.value })}
                   required
                 ></textarea>
                 <select
                   name="rating"
-                  className="w-full p-3 border rounded-lg mb-4"
+                  className="w-full p-3 border border-gray-300 rounded-lg mb-5 focus:outline-green-500 focus:ring-2 focus:ring-green-300"
                   value={newReview.rating}
-                  onChange={(e) =>
-                    setNewReview({ ...newReview, rating: e.target.value })
-                  }
+                  onChange={(e) => setNewReview({ ...newReview, rating: e.target.value })}
                   required
                 >
                   <option value="">Select a rating</option>
                   {[...Array(5).keys()].map((num) => (
                     <option key={num + 1} value={num + 1}>
-                      {num + 1} Star{num > 0 && "s"}
+                      {num + 1} Star{num > 0 ? "s" : ""}
                     </option>
                   ))}
                 </select>
                 <button
                   type="submit"
-                  className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg shadow-lg w-full"
+                  className="bg-green-600 hover:bg-green-700 text-white py-3 px-6 rounded-lg w-full font-semibold shadow-md transition"
                 >
                   Submit Review
                 </button>
@@ -268,15 +353,15 @@ const Home = () => {
       </section>
 
       {/* Gallery Section */}
-      <section className="py-12 bg-white">
-        <h2 className="text-3xl font-bold text-center mb-8">Gallery</h2>
-        <p className="text-center text-gray-600 mb-8">
+      <section className="py-16 bg-green-50">
+        <h2 className="text-4xl font-extrabold text-center mb-8 text-green-900">Gallery</h2>
+        <p className="text-center text-green-700 mb-10 max-w-3xl mx-auto px-4">
           View our curated collection of audio equipment used by our satisfied customers.
         </p>
         <div className="flex justify-center">
           <Link
             to="/gallery"
-            className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-6 rounded-lg shadow-lg"
+            className="bg-green-600 hover:bg-green-700 text-white py-3 px-8 rounded-lg shadow-lg font-semibold transition"
           >
             View Gallery
           </Link>
@@ -284,84 +369,27 @@ const Home = () => {
       </section>
 
       {/* Contact Section */}
-      <section className="py-12 bg-gray-50">
-        <h2 className="text-3xl font-bold text-center mb-8">Contact Us</h2>
-        <p className="text-center text-gray-600 mb-8">
-          Have questions? Need assistance? We're here to help!
+      <section className="py-16 bg-white">
+        <h2 className="text-4xl font-extrabold text-center mb-8 text-gray-900">Contact Us</h2>
+        <p className="text-center text-gray-700 mb-12 max-w-3xl mx-auto px-4">
+          Have questions? Need assistance? We're here to help! Reach out anytime.
         </p>
         <div className="flex justify-center">
           <Link
             to="/contact"
-            className="bg-purple-500 hover:bg-purple-600 text-white py-2 px-6 rounded-lg shadow-lg"
+            className="bg-purple-600 hover:bg-purple-700 text-white py-3 px-8 rounded-lg shadow-lg font-semibold transition"
           >
             Get in Touch
           </Link>
         </div>
       </section>
 
-      {/* Subscription Section */}
-      <section className="py-12 bg-blue-500 text-white text-center">
-        <h2 className="text-3xl font-bold mb-4">Subscribe to Our Newsletter</h2>
-        <p className="mb-6">Stay updated with the latest deals and promotions.</p>
-        <div className="flex justify-center">
-          <input
-            type="email"
-            placeholder="Enter your email"
-            className="p-2 rounded-l-lg"
-          />
-          <button className="bg-green-500 hover:bg-green-600 py-2 px-4 rounded-r-lg">
-            Subscribe
-          </button>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="w-full bg-gray-800 text-white py-8">
-        <div className="max-w-screen-xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          <div>
-            <h3 className="font-bold text-lg">Quick Links</h3>
-            <ul className="mt-4 space-y-2">
-              <li>
-                <Link to="/" className="hover:underline">
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link to="/items" className="hover:underline">
-                  Items
-                </Link>
-              </li>
-              <li>
-                <Link to="/contact" className="hover:underline">
-                  Contact Us
-                </Link>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="font-bold text-lg">Contact Info</h3>
-            <p className="mt-4">Email: contact@audiorental.com</p>
-            <p>Phone: +1 123-456-7890</p>
-          </div>
-          <div>
-            <h3 className="font-bold text-lg">Follow Us</h3>
-            <div className="flex mt-4 space-x-4">
-              <a href="#" className="hover:underline">
-                Facebook
-              </a>
-              <a href="#" className="hover:underline">
-                Twitter
-              </a>
-              <a href="#" className="hover:underline">
-                Instagram
-              </a>
-            </div>
-          </div>
-        </div>
-        <div className="text-center mt-8">© 2025 AudioRental. All rights reserved.</div>
-      </footer>
+      <Footer />
     </div>
+
+   
   );
 };
 
-export default Home;
+
+      
