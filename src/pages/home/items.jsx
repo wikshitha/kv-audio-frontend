@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState, useMemo } from "react";
 import toast from "react-hot-toast";
 import ProductCard from "../../components/productCard";
+import Footer from "../../components/footer";
 
 export default function Items() {
   const [state, setState] = useState("loading");
@@ -16,7 +17,6 @@ export default function Items() {
     const handler = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm);
     }, 400);
-
     return () => clearTimeout(handler);
   }, [searchTerm]);
 
@@ -75,85 +75,90 @@ export default function Items() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-gray-50 px-4 py-10">
-      {/* Page Heading and Intro */}
-      <h2 className="text-3xl font-bold text-center text-gray-800 mb-2">
-        Explore Our Audio Rental Collection
-      </h2>
-      <p className="text-center text-gray-600 max-w-2xl mx-auto mb-8 text-sm sm:text-base">
-        Discover a wide range of high-quality audio equipment available for rent — from professional microphones and speakers to DJ gear and complete sound systems. Whether you're planning a small event or a major production, we have the tools to bring your sound to life.
-      </p>
+    <div className="min-h-screen flex flex-col justify-between bg-gray-50">
+      {/* Main content with padding */}
+      <div className="flex-grow px-4 py-10">
+        <h2 className="text-3xl font-bold text-center text-gray-800 mb-2">
+          Explore Our Audio Rental Collection
+        </h2>
+        <p className="text-center text-gray-600 max-w-2xl mx-auto mb-8 text-sm sm:text-base">
+          Discover a wide range of high-quality audio equipment available for rent — from professional microphones and speakers to DJ gear and complete sound systems. Whether you're planning a small event or a major production, we have the tools to bring your sound to life.
+        </p>
 
-      {/* Filters: Category + Search + Clear */}
-      <div className="flex flex-col md:flex-row gap-4 justify-center items-center mb-10">
-        <select
-          value={selectedCategory}
-          onChange={(e) => setSelectedCategory(e.target.value)}
-          className="px-4 py-2 rounded-md border border-gray-300 focus:ring-2 focus:ring-[#AA60C8] text-gray-700 shadow-sm"
-        >
-          <option value="All">All Categories</option>
-          {categories.map((cat) => (
-            <option key={cat} value={cat}>
-              {cat}
-            </option>
-          ))}
-        </select>
+        {/* Filters */}
+        <div className="flex flex-col md:flex-row gap-4 justify-center items-center mb-10">
+          <select
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            className="px-4 py-2 rounded-md border border-gray-300 focus:ring-2 focus:ring-[#AA60C8] text-gray-700 shadow-sm"
+          >
+            <option value="All">All Categories</option>
+            {categories.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
+            ))}
+          </select>
 
-        <input
-          type="text"
-          placeholder="Search by product name"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="px-4 py-2 w-full md:w-[300px] rounded-md border border-gray-300 focus:ring-2 focus:ring-[#AA60C8] text-gray-700 shadow-sm"
-        />
+          <input
+            type="text"
+            placeholder="Search by product name"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="px-4 py-2 w-full md:w-[300px] rounded-md border border-gray-300 focus:ring-2 focus:ring-[#AA60C8] text-gray-700 shadow-sm"
+          />
 
-        <button
-          onClick={handleClearFilters}
-          className="px-4 py-2 bg-[#AA60C8] text-white rounded-md hover:bg-[#944eb3] transition"
-        >
-          Clear Filters
-        </button>
+          <button
+            onClick={handleClearFilters}
+            className="px-4 py-2 bg-[#AA60C8] text-white rounded-md hover:bg-[#944eb3] transition"
+          >
+            Clear Filters
+          </button>
+        </div>
+
+        {/* Loading */}
+        {state === "loading" && (
+          <div className="flex justify-center items-center h-60">
+            <div className="w-12 h-12 border-4 border-t-green-500 border-gray-300 rounded-full animate-spin"></div>
+          </div>
+        )}
+
+        {/* Error */}
+        {state === "error" && (
+          <div className="text-center text-red-500 mt-10 text-lg">
+            Oops! Something went wrong while loading the items. Please check your connection and try refreshing the page.
+          </div>
+        )}
+
+        {/* No results */}
+        {state === "success" && filteredItems.length === 0 && (
+          <div className="text-center text-gray-500 mt-10 text-lg">
+            No items found matching your filters. Try changing the category or search term, or{" "}
+            <button onClick={handleClearFilters} className="text-[#AA60C8] underline">
+              reset filters
+            </button>{" "}
+            to browse everything.
+          </div>
+        )}
+
+        {/* Product Grid */}
+        {state === "success" && filteredItems.length > 0 && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+            {filteredItems.map((item) => (
+              <ProductCard
+                key={item._id}
+                item={{
+                  ...item,
+                  nameHighlighted: highlightText(item.name, debouncedSearchTerm),
+                }}
+              />
+            ))}
+          </div>
+        )}
       </div>
 
-      {/* Loading */}
-      {state === "loading" && (
-        <div className="flex justify-center items-center h-60">
-          <div className="w-12 h-12 border-4 border-t-green-500 border-gray-300 rounded-full animate-spin"></div>
-        </div>
-      )}
-
-      {/* Error */}
-      {state === "error" && (
-        <div className="text-center text-red-500 mt-10 text-lg">
-          Oops! Something went wrong while loading the items. Please check your connection and try refreshing the page.
-        </div>
-      )}
-
-      {/* No results */}
-      {state === "success" && filteredItems.length === 0 && (
-        <div className="text-center text-gray-500 mt-10 text-lg">
-          No items found matching your filters. Try changing the category or search term, or{" "}
-          <button onClick={handleClearFilters} className="text-[#AA60C8] underline">
-            reset filters
-          </button>{" "}
-          to browse everything.
-        </div>
-      )}
-
-      {/* Product Grid */}
-      {state === "success" && filteredItems.length > 0 && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
-          {filteredItems.map((item) => (
-            <ProductCard
-              key={item._id}
-              item={{
-                ...item,
-                nameHighlighted: highlightText(item.name, debouncedSearchTerm),
-              }}
-            />
-          ))}
-        </div>
-      )}
+      {/* Always pinned to bottom */}
+      <Footer />
     </div>
   );
 }
