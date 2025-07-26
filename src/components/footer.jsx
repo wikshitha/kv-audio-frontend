@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const Footer = () => {
+export default function Footer() {
   return (
     <footer className="bg-gray-950 text-gray-300 pt-12 pb-6 px-6 md:px-12 mt-20 border-t border-gray-800 shadow-inner">
       <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
@@ -59,10 +59,13 @@ const Footer = () => {
           </address>
         </div>
 
-        {/* Copyright */}
-        <div className="flex items-end justify-start lg:justify-end">
-          <div className="text-sm text-gray-500 border-t border-gray-800 pt-6 w-full lg:w-auto text-center lg:text-right">
+        {/* Copyright + Credit */}
+        <div className="flex flex-col items-start lg:items-end justify-end">
+          <div className="text-sm text-gray-500 border-t border-gray-800 pt-6 w-full lg:w-auto text-left lg:text-right">
             © 2025 AudioRental. All rights reserved.
+          </div>
+          <div className="text-xs text-gray-600 mt-2 italic">
+            Designed & Developed by <span className="text-green-400 font-medium">Wikshitha Umindu</span>
           </div>
         </div>
       </div>
@@ -70,4 +73,4 @@ const Footer = () => {
   );
 };
 
-export default Footer;
+

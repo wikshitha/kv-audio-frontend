@@ -133,13 +133,13 @@ export default function Home() {
           <div className="flex justify-center gap-6">
             <Link
               to="/items"
-              className="bg-green-500 hover:bg-green-600 transition duration-300 text-white py-3 px-8 rounded-lg font-semibold shadow-lg shadow-green-400/50"
+              className="bg-[#AA60C8] hover:bg-[rgb(124,80,141)] transition duration-300 text-white py-3 px-8 rounded-lg font-semibold shadow-lg shadow-[#AA60C8]/50"
             >
               Explore Items
             </Link>
             <a
               href="#reviews"
-              className="border border-white text-white hover:bg-white hover:text-green-600 transition duration-300 py-3 px-8 rounded-lg font-semibold"
+              className="border border-white text-white hover:bg-white hover:text-[#AA60C8] transition duration-300 py-3 px-8 rounded-lg font-semibold"
             >
               See Reviews
             </a>
@@ -160,8 +160,8 @@ export default function Home() {
       </section>
 
       {/* Services Section */}
-      <section className="py-16 bg-gradient-to-tr from-green-50 to-green-100">
-        <h2 className="text-4xl font-extrabold text-center mb-12 text-green-900">Our Services</h2>
+      <section className="py-16 bg-gradient-to-tr from-purple-50 to-purple-100">
+        <h2 className="text-4xl font-extrabold text-center mb-12 text-[#960dcd]">Our Services</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 max-w-6xl mx-auto px-6">
           {[
             {
@@ -170,7 +170,7 @@ export default function Home() {
               icon: (
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-12 w-12 mx-auto mb-4 text-green-600"
+                  className="h-12 w-12 mx-auto mb-4 text-[#AA60C8]"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -190,7 +190,7 @@ export default function Home() {
               icon: (
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-12 w-12 mx-auto mb-4 text-green-600"
+                  className="h-12 w-12 mx-auto mb-4 text-[#AA60C8]"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -210,7 +210,7 @@ export default function Home() {
               icon: (
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-12 w-12 mx-auto mb-4 text-green-600"
+                  className="h-12 w-12 mx-auto mb-4 text-[#AA60C8]"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -230,7 +230,7 @@ export default function Home() {
               className="bg-white p-8 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300"
             >
               {icon}
-              <h3 className="text-xl font-semibold mb-3 text-green-900">{title}</h3>
+              <h3 className="text-xl font-semibold mb-3 text-[#960dcd]">{title}</h3>
               <p className="text-gray-700">{desc}</p>
             </div>
           ))}
@@ -257,7 +257,7 @@ export default function Home() {
                   <img
                     src={review.profilePic || "/default-avatar.png"}
                     alt={`${review.name}'s profile`}
-                    className="w-20 h-20 rounded-full object-cover mb-4 border-4 border-green-400"
+                    className="w-20 h-20 rounded-full object-cover mb-4 border-4 border-[#c654f3]"
                     onError={(e) => {
                       e.target.onerror = null;
                       e.target.src = "/default-avatar.png";
@@ -265,7 +265,7 @@ export default function Home() {
                   />
                   <p className="italic text-gray-800 mb-4">"{review.coment}"</p>
                   <div className="text-yellow-500 mb-3">{renderStars(review.rating)}</div>
-                  <h4 className="font-semibold text-green-900 mb-2">- {review.name}</h4>
+                  <h4 className="font-semibold text-[#960dcd] mb-2">- {review.name}</h4>
                   {/* Optional: Show date or location if available */}
                   {review.date && (
                     <p className="text-sm text-gray-500 mb-4">
@@ -354,14 +354,14 @@ export default function Home() {
 
       {/* Gallery Section */}
       <section className="py-16 bg-green-50">
-        <h2 className="text-4xl font-extrabold text-center mb-8 text-green-900">Gallery</h2>
-        <p className="text-center text-green-700 mb-10 max-w-3xl mx-auto px-4">
+        <h2 className="text-4xl font-extrabold text-center mb-8 text-[#960dcd]">Gallery</h2>
+        <p className="text-center text-purple-700 mb-10 max-w-3xl mx-auto px-4">
           View our curated collection of audio equipment used by our satisfied customers.
         </p>
         <div className="flex justify-center">
           <Link
             to="/gallery"
-            className="bg-green-600 hover:bg-green-700 text-white py-3 px-8 rounded-lg shadow-lg font-semibold transition"
+            className="bg-[#b714f7] hover:bg-[rgb(186,96,221)] text-white py-3 px-8 rounded-lg shadow-lg font-semibold transition"
           >
             View Gallery
           </Link>
