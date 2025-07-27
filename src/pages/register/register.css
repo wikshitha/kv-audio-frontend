@@ -8,29 +8,95 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   }
   
   /* Form Container */
   .form-container {
 	width: 400px;
-	padding: 20px;
-	background: rgba(0, 0, 0, 0.7);
-	border-radius: 15px;
+	padding: 30px;
+	background: rgba(255, 255, 255, 0.05);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	backdrop-filter: blur(16px);
+	-webkit-backdrop-filter: blur(16px);
+	border-radius: 20px;
+	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	animation: fadeIn 0.6s ease-in-out;
+  }
+  
+  /* Fade-in Animation */
+  @keyframes fadeIn {
+	from {
+	  opacity: 0;
+	  transform: scale(0.95);
+	}
+	to {
+	  opacity: 1;
+	  transform: scale(1);
+	}
   }
   
   /* Form Header */
   .form-header {
 	text-align: center;
-	margin-bottom: 20px;
+	margin-bottom: 25px;
+	position: relative;
   }
   
-  .logo-img {
-	width: 80px;
-	height: 80px;
+  /* Avatar Upload Circle */
+  .avatar-wrapper {
+	position: relative;
+	display: inline-block;
+	cursor: pointer;
+	transition: transform 0.3s ease;
+  }
+  
+  .avatar-wrapper:hover {
+	transform: scale(1.03);
+  }
+  
+  .profile-avatar {
+	width: 100px;
+	height: 100px;
 	object-fit: cover;
+	border-radius: 50%;
+	border: 3px solid #AA60C8;
+	box-shadow: 0 0 10px rgba(170, 96, 200, 0.4);
+	background-color: #fff;
+	transition: all 0.3s ease-in-out;
+  }
+  
+  .camera-icon {
+	position: absolute;
+	bottom: 4px;
+	right: 4px;
+	background: #AA60C8;
+	color: white;
+	border-radius: 50%;
+	padding: 4px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* Remove Avatar Button */
+  .remove-avatar-btn {
+	position: absolute;
+	top: -6px;
+	right: -6px;
+	background: transparent;
+	border: none;
+	color: #FFDFEF;
+	cursor: pointer;
+	transition: color 0.3s;
+  }
+  
+  .remove-avatar-btn:hover {
+	color: #ffffff;
   }
   
   /* Form Body */
@@ -38,54 +104,75 @@
 	width: 100%;
 	display: flex;
 	flex-direction: column;
-	gap: 15px;
+	gap: 18px;
   }
   
   /* Input Fields */
   .input-field {
 	width: 100%;
-	padding: 10px;
-	background: transparent;
-	border: none;
-	border-bottom: 2px solid white;
-	color: white;
+	padding: 12px;
+	background: rgba(255, 223, 239, 0.1); /* Primary soft */
+	border: 1px solid #D69ADE;            /* Secondary */
+	border-radius: 8px;
+	color: #ffffff;
 	font-size: 1rem;
 	outline: none;
+	transition: all 0.3s ease;
   }
   
-  /* File Input */
-  .file-input-container {
-	display: flex;
-	flex-direction: column;
-	gap: 5px;
+  .input-field:focus {
+	background-color: rgba(255, 223, 239, 0.2);
+	border-color: #AA60C8; /* Action */
   }
   
-  .file-label {
-	color: white;
-	font-size: 0.9rem;
-  }
-  
+  /* Hidden File Input */
   .file-input {
-	font-size: 0.9rem;
-	color: white;
+	display: none;
   }
   
   /* Submit Button */
   .submit-btn {
 	width: 100%;
-	padding: 10px;
+	padding: 12px;
 	margin-top: 20px;
-	background-color: #efac38;
+	background: linear-gradient(135deg, #D69ADE, #AA60C8);
 	border: none;
-	border-radius: 10px;
-	font-size: 1.2rem;
-	font-weight: bold;
+	border-radius: 12px;
+	font-size: 1.1rem;
+	font-weight: 600;
 	color: white;
 	cursor: pointer;
-	transition: background 0.3s ease;
+	transition: transform 0.3s ease, box-shadow 0.3s ease;
+	box-shadow: 0 4px 14px rgba(170, 96, 200, 0.4);
   }
   
-  .submit-btn:hover {
-	background-color: #d89e33;
+  .submit-btn:disabled {
+	opacity: 0.6;
+	cursor: not-allowed;
+  }
+  
+  .submit-btn:hover:not(:disabled) {
+	transform: translateY(-2px);
+	box-shadow: 0 6px 20px rgba(170, 96, 200, 0.6);
+  }
+  
+  /* Login Redirect Text */
+  .login-redirect {
+	margin-top: 15px;
+	font-size: 0.95rem;
+	color: #FFDFEF;
+	text-align: center;
+  }
+  
+  .login-redirect span {
+	color: #AA60C8;
+	font-weight: 600;
+	cursor: pointer;
+	transition: color 0.3s;
+  }
+  
+  .login-redirect span:hover {
+	color: #D69ADE;
+	text-decoration: underline;
   }
   

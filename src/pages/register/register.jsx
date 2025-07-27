@@ -4,6 +4,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import mediaUpload from "../../utils/mediaUpload";
+import { FaCamera, FaTimesCircle } from "react-icons/fa";
 
 export default function RegisterPage() {
   const [firstName, setFirstName] = useState("");
@@ -13,35 +14,53 @@ export default function RegisterPage() {
   const [address, setAddress] = useState("");
   const [phone, setPhone] = useState("");
   const [profilePic, setProfilePic] = useState(null);
+  const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
 
   async function handleOnSubmit(e) {
+    e.preventDefault();
+
+    if (
+      !firstName ||
+      !lastName ||
+      !email ||
+      !password ||
+      !address ||
+      !phone ||
+      !profilePic
+    ) {
+      toast.error("Please fill in all fields.");
+      return;
+    }
+
     try {
-      e.preventDefault();
-      const profileImagePromise = mediaUpload(profilePic);
-      const imageUrl = await profileImagePromise;
+      setLoading(true);
+      const uploadToastId = toast.loading("Uploading profile picture...");
+      const imageUrl = await mediaUpload(profilePic);
+      toast.dismiss(uploadToastId);
+      toast.success("Image uploaded successfully");
 
       const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
-      axios
-        .post(`${backendUrl}/api/users`, {
-          firstName,
-          lastName,
-          email,
-          password,
-          address,
-          phone,
-          profilePic: imageUrl,
-        })
-        .then((res) => {
-          toast.success("Registration Successful");
-          navigate("/login");
-        })
-        .catch((err) => {
-          toast.error(err?.response?.data?.message || "An error occurred");
-        });
+      await axios.post(`${backendUrl}/api/users`, {
+        firstName,
+        lastName,
+        email,
+        password,
+        address,
+        phone,
+        profilePic: imageUrl,
+      });
+
+      toast.success("Registration Successful");
+      navigate("/login");
     } catch (err) {
-      toast.error("Failed to upload profile picture");
+      toast.error(
+        err?.response?.data?.message || "Something went wrong during registration."
+      );
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -51,10 +70,35 @@ export default function RegisterPage() {
         onSubmit={handleOnSubmit}
         className="form-container shadow-lg rounded-xl"
       >
-        <div className="form-header">
-          <img src="/logo.png" alt="logo" className="logo-img" />
+        <div className="form-header relative">
+          <label htmlFor="profilePic" className="avatar-wrapper">
+            <img
+              src={
+                profilePic
+                  ? URL.createObjectURL(profilePic)
+                  : "/public/user.png"
+              }
+              alt="Profile Preview"
+              className="profile-avatar"
+            />
+            <div className="camera-icon">
+              <FaCamera size={16} />
+            </div>
+          </label>
+
+          {profilePic && (
+            <button
+              type="button"
+              className="remove-avatar-btn"
+              onClick={() => setProfilePic(null)}
+            >
+              <FaTimesCircle size={18} />
+            </button>
+          )}
+
           <h2 className="text-white text-xl font-bold mt-4">Register</h2>
         </div>
+
         <div className="form-body">
           <input
             type="text"
@@ -98,22 +142,24 @@ export default function RegisterPage() {
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
           />
-          <div className="file-input-container">
-            <label htmlFor="profilePic" className="file-label">
-              Upload Profile Picture
-            </label>
-            <input
-              type="file"
-              id="profilePic"
-              accept="image/*"
-              className="file-input"
-              onChange={(e) => setProfilePic(e.target.files[0])}
-            />
-          </div>
+
+          <input
+            type="file"
+            id="profilePic"
+            accept="image/*"
+            className="file-input"
+            onChange={(e) => setProfilePic(e.target.files[0])}
+          />
         </div>
-        <button type="submit" className="submit-btn">
-          Register
+
+        <button type="submit" className="submit-btn" disabled={loading}>
+          {loading ? "Registering..." : "Register"}
         </button>
+
+        <p className="login-redirect">
+          Already have an account?{" "}
+          <span onClick={() => navigate("/login")}>Login</span>
+        </p>
       </form>
     </div>
   );
