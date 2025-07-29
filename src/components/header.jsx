@@ -9,7 +9,6 @@ export default function Header() {
     const token = localStorage.getItem("token");
     const location = useLocation();
 
-    // Highlight style for current page
     const isActive = (path) => location.pathname === path;
 
     return (
@@ -56,15 +55,15 @@ export default function Header() {
                 {/* Booking / Cart */}
                 <Link
                     to="/booking"
-                    className={`hidden md:flex items-center text-xl ${
+                    className={` md:flex items-center text-xl ${
                         isActive("/booking") ? "text-white" : "text-black hover:text-white"
                     } transition`}
                 >
                     <FaCartShopping />
                 </Link>
 
-                {/* Logout Button */}
-                {token !== null && (
+                {/* Auth Buttons */}
+                {token ? (
                     <button
                         className="hidden md:inline-block text-sm px-3 py-1 rounded-md bg-white text-black hover:bg-gray-200 transition"
                         onClick={() => {
@@ -74,6 +73,13 @@ export default function Header() {
                     >
                         LogOut
                     </button>
+                ) : (
+                    <Link
+                        to="/login"
+                        className="hidden md:inline-block text-sm px-3 py-1 rounded-md bg-white text-black hover:bg-gray-200 transition"
+                    >
+                        Login
+                    </Link>
                 )}
 
                 {/* Hamburger - Mobile */}
