@@ -4,7 +4,16 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import mediaUpload from "../../utils/mediaUpload";
-import { FaCamera, FaTimesCircle } from "react-icons/fa";
+import {
+  FaCamera,
+  FaTimesCircle,
+  FaUser,
+  FaEnvelope,
+  FaLock,
+  FaMapMarkerAlt,
+  FaPhone,
+  FaSpinner,
+} from "react-icons/fa";
 
 export default function RegisterPage() {
   const [firstName, setFirstName] = useState("");
@@ -15,21 +24,14 @@ export default function RegisterPage() {
   const [phone, setPhone] = useState("");
   const [profilePic, setProfilePic] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [loadingLoginRedirect, setLoadingLoginRedirect] = useState(false);
 
   const navigate = useNavigate();
 
   async function handleOnSubmit(e) {
     e.preventDefault();
 
-    if (
-      !firstName ||
-      !lastName ||
-      !email ||
-      !password ||
-      !address ||
-      !phone ||
-      !profilePic
-    ) {
+    if (!firstName || !lastName || !email || !password || !address || !phone || !profilePic) {
       toast.error("Please fill in all fields.");
       return;
     }
@@ -64,20 +66,20 @@ export default function RegisterPage() {
     }
   }
 
+  function handleLoginRedirect() {
+    setLoadingLoginRedirect(true);
+    setTimeout(() => {
+      navigate("/login");
+    }, 800);
+  }
+
   return (
     <div className="bg-picture flex justify-center items-center">
-      <form
-        onSubmit={handleOnSubmit}
-        className="form-container shadow-lg rounded-xl"
-      >
+      <form onSubmit={handleOnSubmit} className="form-container shadow-lg rounded-xl">
         <div className="form-header relative">
           <label htmlFor="profilePic" className="avatar-wrapper">
             <img
-              src={
-                profilePic
-                  ? URL.createObjectURL(profilePic)
-                  : "/public/user.png"
-              }
+              src={profilePic ? URL.createObjectURL(profilePic) : "/public/user.png"}
               alt="Profile Preview"
               className="profile-avatar"
             />
@@ -87,11 +89,7 @@ export default function RegisterPage() {
           </label>
 
           {profilePic && (
-            <button
-              type="button"
-              className="remove-avatar-btn"
-              onClick={() => setProfilePic(null)}
-            >
+            <button type="button" className="remove-avatar-btn" onClick={() => setProfilePic(null)}>
               <FaTimesCircle size={18} />
             </button>
           )}
@@ -100,48 +98,71 @@ export default function RegisterPage() {
         </div>
 
         <div className="form-body">
-          <input
-            type="text"
-            placeholder="First Name"
-            className="input-field"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-          />
-          <input
-            type="text"
-            placeholder="Last Name"
-            className="input-field"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-          />
-          <input
-            type="email"
-            placeholder="Email"
-            className="input-field"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            className="input-field"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <input
-            type="text"
-            placeholder="Address"
-            className="input-field"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-          />
-          <input
-            type="text"
-            placeholder="Phone"
-            className="input-field"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-          />
+          <div className="input-icon-wrapper">
+            <FaUser className="input-icon" />
+            <input
+              type="text"
+              placeholder="First Name"
+              className="input-field"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+            />
+          </div>
+
+          <div className="input-icon-wrapper">
+            <FaUser className="input-icon" />
+            <input
+              type="text"
+              placeholder="Last Name"
+              className="input-field"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+            />
+          </div>
+
+          <div className="input-icon-wrapper">
+            <FaEnvelope className="input-icon" />
+            <input
+              type="email"
+              placeholder="Email"
+              className="input-field"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+
+          <div className="input-icon-wrapper">
+            <FaLock className="input-icon" />
+            <input
+              type="password"
+              placeholder="Password"
+              className="input-field"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+
+          <div className="input-icon-wrapper">
+            <FaMapMarkerAlt className="input-icon" />
+            <input
+              type="text"
+              placeholder="Address"
+              className="input-field"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+            />
+          </div>
+
+          <div className="input-icon-wrapper">
+            <FaPhone className="input-icon" />
+            <input
+              type="text"
+              placeholder="Phone"
+              className="input-field"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+            />
+          </div>
 
           <input
             type="file"
@@ -158,7 +179,18 @@ export default function RegisterPage() {
 
         <p className="login-redirect">
           Already have an account?{" "}
-          <span onClick={() => navigate("/login")}>Login</span>
+          <span
+            onClick={handleLoginRedirect}
+            style={{ cursor: "pointer", display: "inline-flex", alignItems: "center" }}
+          >
+            {loadingLoginRedirect ? (
+              <>
+                <FaSpinner className="spin" style={{ marginRight: "8px" }} />
+              </>
+            ) : (
+              "Login"
+            )}
+          </span>
         </p>
       </form>
     </div>
