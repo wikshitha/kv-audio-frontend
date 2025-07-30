@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { FaStar, FaRegStar } from "react-icons/fa";
 import Footer from "../../components/footer";
+import toast from "react-hot-toast";
 
 export default function Home() {
   const [reviews, setReviews] = useState([]);
@@ -45,16 +46,17 @@ export default function Home() {
         setIsLoading(false);
       })
       .catch((error) => {
+        toast.error("Failed to fetch reviews. Please try again later.");
         console.error("Failed to fetch reviews:", error);
         setError("Failed to fetch reviews. Please try again later.");
         setIsLoading(false);
       });
-  }, []);
+  }, [newReview]);
 
   const addReview = () => {
     const token = localStorage.getItem("token");
     if (!token) {
-      alert("You must be logged in to submit a review.");
+      toast.error("You must be logged in to submit a review.");
       return;
     }
 
@@ -65,7 +67,7 @@ export default function Home() {
         },
       })
       .then((res) => {
-        alert(res.data.message);
+        toast.success(res.data.message);
         setNewReview({ coment: "", rating: "" });
         setIsModalOpen(false);
         setIsLoading(true);
@@ -73,14 +75,14 @@ export default function Home() {
       })
       .catch((error) => {
         console.error("Failed to add review:", error);
-        alert("Failed to add review. Please try again later.");
+        toast.error("Failed to add review. Please try again later.");
       });
   };
 
   const deleteReview = (email) => {
     const token = localStorage.getItem("token");
     if (!token) {
-      alert("You must be logged in to delete a review.");
+      toast.error("You must be logged in to delete a review.");
       return;
     }
 
@@ -91,11 +93,12 @@ export default function Home() {
         },
       })
       .then(() => {
-        console.log("Review deleted successfully");
+        toast.success("Review deleted successfully");
         setReviews(reviews.filter((review) => review.email !== email));
         setIsLoading(true);
       })
       .catch((err) => {
+        toast.error("Error deleting review");
         console.error("Error deleting review:", err);
       });
   };

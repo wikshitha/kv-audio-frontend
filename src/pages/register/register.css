@@ -1,166 +1,37 @@
-.bg-picture {
-	background-image: url("/bg.jpg");
-	background-size: cover;
-	background-position: center;
-	background-repeat: no-repeat;
-	min-height: 100vh;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  }
-  
-  .form-container {
-	width: 400px;
-	padding: 30px;
-	background: rgba(255, 255, 255, 0.05);
-	border: 1px solid rgba(255, 255, 255, 0.1);
-	backdrop-filter: blur(16px);
-	border-radius: 20px;
-	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	animation: fadeIn 0.6s ease-in-out;
-  }
-  
-  @keyframes fadeIn {
-	from {
-	  opacity: 0;
-	  transform: scale(0.95);
-	}
-	to {
-	  opacity: 1;
-	  transform: scale(1);
-	}
-  }
-  
-  .form-header {
-	text-align: center;
-	margin-bottom: 20px;
+.avatar-wrapper {
 	position: relative;
+	display: inline-block;
+	cursor: pointer;
+	transition: transform 0.3s ease;
   }
   
-  .avatar-wrapper {
-	display: flex;
-	justify-content: center;
+  .avatar-wrapper:hover {
+	transform: scale(1.03);
   }
   
   .profile-avatar {
 	width: 100px;
 	height: 100px;
+	object-fit: cover;
 	border-radius: 50%;
+	border: 3px solid #AA60C8;
+	box-shadow: 0 0 10px rgba(170, 96, 200, 0.4);
 	background-color: #fff;
-	overflow: hidden;
+	transition: all 0.3s ease-in-out;
+  }
+  
+  .camera-icon {
+	position: absolute;
+	bottom: 4px;
+	right: 4px;
+	background: #AA60C8;
+	color: white;
+	border-radius: 50%;
+	padding: 6px;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	border: 3px solid #AA60C8;
-	box-shadow: 0 0 10px rgba(170, 96, 200, 0.4);
-  }
-  
-  .file-input {
-	display: none;
-  }
-  
-  .form-body {
-	width: 100%;
-	display: flex;
-	flex-direction: column;
-	gap: 16px;
-  }
-  
-  .input-icon-wrapper {
-	position: relative;
-	width: 100%;
-  }
-  
-  .input-icon {
-	position: absolute;
-	top: 50%;
-	left: 14px;
-	transform: translateY(-50%);
-	color: #D69ADE;
-	font-size: 16px;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 	pointer-events: none;
-  }
-  
-  .input-field {
-	width: 100%;
-	padding: 12px 14px 12px 42px;
-	background: rgba(255, 223, 239, 0.1);
-	border: 1px solid #D69ADE;
-	border-radius: 8px;
-	color: #ffffff;
-	font-size: 1rem;
-	outline: none;
-	transition: all 0.3s ease;
-	box-sizing: border-box;
-  }
-  
-  .input-field:focus {
-	background-color: rgba(255, 223, 239, 0.2);
-	border-color: #AA60C8;
-  }
-  
-  .submit-btn {
-	width: 100%;
-	padding: 12px;
-	margin-top: 20px;
-	background: linear-gradient(135deg, #AA60C8, #7C3AED);
-	border: none;
-	border-radius: 12px;
-	font-size: 1.1rem;
-	font-weight: 600;
-	color: white;
-	cursor: pointer;
-	transition: transform 0.3s ease, box-shadow 0.3s ease;
-	box-shadow: 0 4px 14px rgba(170, 96, 200, 0.4);
-  }
-  
-  .submit-btn:disabled {
-	opacity: 0.6;
-	cursor: not-allowed;
-  }
-  
-  .submit-btn:hover:not(:disabled) {
-	transform: translateY(-2px);
-	box-shadow: 0 6px 20px rgba(124, 58, 237, 0.6);
-  }
-  
-  .login-redirect {
-	margin-top: 15px;
-	font-size: 1.1rem;
-	color: #ffffff;
-	text-align: center;
-	font-weight: 600;
-  }
-  
-  .login-redirect span {
-	color: #AA60C8;
-	font-weight: 700;
-	cursor: pointer;
-	transition: color 0.3s;
-	display: inline-flex;
-	align-items: center;
-  }
-  
-  .login-redirect span:hover {
-	color: #D69ADE;
-	text-decoration: underline;
-  }
-  
-  @keyframes spin {
-	from {
-	  transform: rotate(0deg);
-	}
-	to {
-	  transform: rotate(360deg);
-	}
-  }
-  
-  .spin {
-	animation: spin 1s linear infinite;
-	margin-left: 8px;
   }
   

@@ -13,14 +13,13 @@ export default function DashboardPage() {
 
   const [recentActivities, setRecentActivities] = useState([]);
   const chartRef = useRef(null);
-  const chartInstance = useRef(null); // Store chart instance
+  const chartInstance = useRef(null);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
 
     const fetchDashboardData = async () => {
       try {
-        // Fetch stats
         const statsResponse = await axios.get(
           `${import.meta.env.VITE_BACKEND_URL}/api/users/stats`,
           {
@@ -32,7 +31,6 @@ export default function DashboardPage() {
           ...statsResponse.data,
         }));
 
-        // Fetch recent activities
         const activitiesResponse = await axios.get(
           `${import.meta.env.VITE_BACKEND_URL}/api/users/recent-activities`,
           {
@@ -41,7 +39,6 @@ export default function DashboardPage() {
         );
         setRecentActivities(activitiesResponse.data);
 
-        // Handle chart rendering
         if (chartInstance.current) {
           chartInstance.current.destroy();
         }
@@ -67,6 +64,7 @@ export default function DashboardPage() {
             plugins: {
               legend: { display: false },
             },
+            maintainAspectRatio: false,
           },
         });
       } catch (error) {
@@ -76,7 +74,6 @@ export default function DashboardPage() {
 
     fetchDashboardData();
 
-    // Cleanup on component unmount
     return () => {
       if (chartInstance.current) {
         chartInstance.current.destroy();
@@ -86,15 +83,17 @@ export default function DashboardPage() {
 
   return (
     <motion.div
-      className="w-full h-full p-6"
+      className="w-full h-full px-4 py-6 md:p-6"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
-      <h1 className="text-3xl font-bold mb-6 text-center">Admin Dashboard</h1>
+      <h1 className="text-2xl md:text-3xl font-bold mb-6 text-center">
+        Admin Dashboard
+      </h1>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {[
           { title: "Total Orders", value: stats.totalOrders, color: "bg-green-500" },
           { title: "Total Users", value: stats.totalUsers, color: "bg-blue-500" },
@@ -103,37 +102,39 @@ export default function DashboardPage() {
         ].map((stat, index) => (
           <motion.div
             key={index}
-            className={`p-6 ${stat.color} text-white shadow-lg rounded-xl text-center`}
+            className={`p-4 md:p-6 ${stat.color} text-white shadow-lg rounded-xl text-center`}
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: index * 0.2 }}
           >
-            <h2 className="text-xl font-bold">{stat.title}</h2>
-            <p className="text-2xl mt-4">{stat.value}</p>
+            <h2 className="text-lg md:text-xl font-bold">{stat.title}</h2>
+            <p className="text-xl md:text-2xl mt-2 md:mt-4">{stat.value}</p>
           </motion.div>
         ))}
       </div>
 
       {/* Graph */}
       <motion.div
-        className="mt-8 bg-white shadow-lg rounded-xl p-6"
+        className="mt-8 bg-white shadow-lg rounded-xl p-4 md:p-6"
         initial={{ y: 50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5 }}
       >
-        <h2 className="text-2xl font-bold mb-4">Overview Chart</h2>
-        <canvas ref={chartRef} className="w-full h-64"></canvas>
+        <h2 className="text-xl md:text-2xl font-bold mb-4">Overview Chart</h2>
+        <div className="w-full h-[300px] sm:h-[400px]">
+          <canvas ref={chartRef} className="w-full h-full"></canvas>
+        </div>
       </motion.div>
 
       {/* Recent Activity Section */}
       <motion.div
-        className="mt-8 bg-white shadow-lg rounded-xl p-6"
+        className="mt-8 bg-white shadow-lg rounded-xl p-4 md:p-6"
         initial={{ y: 50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.7 }}
       >
-        <h2 className="text-2xl font-bold mb-4">Recent Activity</h2>
-        <ul className="list-disc list-inside space-y-2">
+        <h2 className="text-xl md:text-2xl font-bold mb-4">Recent Activity</h2>
+        <ul className="list-disc list-inside space-y-2 text-sm md:text-base">
           {recentActivities.length > 0 ? (
             recentActivities.map((activity, index) => (
               <li key={index} className="text-gray-700">
@@ -150,7 +151,7 @@ export default function DashboardPage() {
       </motion.div>
 
       {/* Footer */}
-      <footer className="mt-8 text-center text-gray-600">
+      <footer className="mt-8 text-center text-gray-600 text-sm">
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
