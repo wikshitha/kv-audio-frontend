@@ -79,7 +79,7 @@ export default function RegisterPage() {
         <div className="form-header relative">
           <label htmlFor="profilePic" className="avatar-wrapper">
             <img
-              src={profilePic ? URL.createObjectURL(profilePic) : "/public/user.png"}
+              src={profilePic ? URL.createObjectURL(profilePic) : "/user.png"}
               alt="Profile Preview"
               className="profile-avatar"
             />
