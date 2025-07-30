@@ -5,14 +5,13 @@ import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import mediaUpload from "../../utils/mediaUpload";
 import {
-  FaCamera,
-  FaTimesCircle,
   FaUser,
   FaEnvelope,
   FaLock,
   FaMapMarkerAlt,
   FaPhone,
   FaSpinner,
+  FaUserCircle,
 } from "react-icons/fa";
 
 export default function RegisterPage() {
@@ -31,17 +30,21 @@ export default function RegisterPage() {
   async function handleOnSubmit(e) {
     e.preventDefault();
 
-    if (!firstName || !lastName || !email || !password || !address || !phone || !profilePic) {
+    if (!firstName || !lastName || !email || !password || !address || !phone) {
       toast.error("Please fill in all fields.");
       return;
     }
 
     try {
       setLoading(true);
-      const uploadToastId = toast.loading("Uploading profile picture...");
-      const imageUrl = await mediaUpload(profilePic);
-      toast.dismiss(uploadToastId);
-      toast.success("Image uploaded successfully");
+      let imageUrl = "";
+
+      if (profilePic) {
+        const toastId = toast.loading("Uploading profile picture...");
+        imageUrl = await mediaUpload(profilePic);
+        toast.dismiss(toastId);
+        toast.success("Image uploaded");
+      }
 
       const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -78,22 +81,25 @@ export default function RegisterPage() {
       <form onSubmit={handleOnSubmit} className="form-container shadow-lg rounded-xl">
         <div className="form-header relative">
           <label htmlFor="profilePic" className="avatar-wrapper">
-            <img
-              src={profilePic ? URL.createObjectURL(profilePic) : "/public/user.png"}
-              alt="Profile Preview"
-              className="profile-avatar"
-            />
-            <div className="camera-icon">
-              <FaCamera size={16} />
+            <div className="profile-avatar">
+              {profilePic ? (
+                <img
+                  src={URL.createObjectURL(profilePic)}
+                  alt="Preview"
+                  className="object-cover w-full h-full rounded-full"
+                />
+              ) : (
+                <FaUserCircle size={80} className="text-[#AA60C8]" />
+              )}
             </div>
           </label>
-
-          {profilePic && (
-            <button type="button" className="remove-avatar-btn" onClick={() => setProfilePic(null)}>
-              <FaTimesCircle size={18} />
-            </button>
-          )}
-
+          <input
+            type="file"
+            id="profilePic"
+            accept="image/*"
+            className="file-input"
+            onChange={(e) => setProfilePic(e.target.files[0])}
+          />
           <h2 className="text-white text-xl font-bold mt-4">Register</h2>
         </div>
 
@@ -163,14 +169,6 @@ export default function RegisterPage() {
               onChange={(e) => setPhone(e.target.value)}
             />
           </div>
-
-          <input
-            type="file"
-            id="profilePic"
-            accept="image/*"
-            className="file-input"
-            onChange={(e) => setProfilePic(e.target.files[0])}
-          />
         </div>
 
         <button type="submit" className="submit-btn" disabled={loading}>
@@ -179,14 +177,9 @@ export default function RegisterPage() {
 
         <p className="login-redirect">
           Already have an account?{" "}
-          <span
-            onClick={handleLoginRedirect}
-            style={{ cursor: "pointer", display: "inline-flex", alignItems: "center" }}
-          >
+          <span onClick={handleLoginRedirect}>
             {loadingLoginRedirect ? (
-              <>
-                <FaSpinner className="spin" style={{ marginRight: "8px" }} />
-              </>
+              <FaSpinner className="spin" />
             ) : (
               "Login"
             )}

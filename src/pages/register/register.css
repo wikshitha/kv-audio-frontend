@@ -4,7 +4,6 @@
 	background-position: center;
 	background-repeat: no-repeat;
 	min-height: 100vh;
-	height: auto;
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -17,7 +16,6 @@
 	background: rgba(255, 255, 255, 0.05);
 	border: 1px solid rgba(255, 255, 255, 0.1);
 	backdrop-filter: blur(16px);
-	-webkit-backdrop-filter: blur(16px);
 	border-radius: 20px;
 	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
 	display: flex;
@@ -44,54 +42,25 @@
   }
   
   .avatar-wrapper {
-	position: relative;
-	display: inline-block;
-	cursor: pointer;
-	transition: transform 0.3s ease;
-  }
-  
-  .avatar-wrapper:hover {
-	transform: scale(1.03);
+	display: flex;
+	justify-content: center;
   }
   
   .profile-avatar {
 	width: 100px;
 	height: 100px;
-	object-fit: cover;
 	border-radius: 50%;
-	border: 3px solid #AA60C8;
-	box-shadow: 0 0 10px rgba(170, 96, 200, 0.4);
 	background-color: #fff;
-	transition: all 0.3s ease-in-out;
-  }
-  
-  .camera-icon {
-	position: absolute;
-	bottom: 4px;
-	right: 4px;
-	background: #AA60C8;
-	color: white;
-	border-radius: 50%;
-	padding: 4px;
+	overflow: hidden;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+	border: 3px solid #AA60C8;
+	box-shadow: 0 0 10px rgba(170, 96, 200, 0.4);
   }
   
-  .remove-avatar-btn {
-	position: absolute;
-	top: -6px;
-	right: -6px;
-	background: transparent;
-	border: none;
-	color: #FFDFEF;
-	cursor: pointer;
-	transition: color 0.3s;
-  }
-  
-  .remove-avatar-btn:hover {
-	color: #ffffff;
+  .file-input {
+	display: none;
   }
   
   .form-body {
@@ -101,7 +70,6 @@
 	gap: 16px;
   }
   
-  /* Input + Icon wrapper */
   .input-icon-wrapper {
 	position: relative;
 	width: 100%;
@@ -133,10 +101,6 @@
   .input-field:focus {
 	background-color: rgba(255, 223, 239, 0.2);
 	border-color: #AA60C8;
-  }
-  
-  .file-input {
-	display: none;
   }
   
   .submit-btn {
@@ -186,7 +150,6 @@
 	text-decoration: underline;
   }
   
-  /* Spinner Animation */
   @keyframes spin {
 	from {
 	  transform: rotate(0deg);
@@ -198,6 +161,6 @@
   
   .spin {
 	animation: spin 1s linear infinite;
-	margin-right: 8px;
+	margin-left: 8px;
   }
   
