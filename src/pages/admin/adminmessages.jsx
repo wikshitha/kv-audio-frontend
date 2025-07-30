@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { IoMdCloseCircleOutline } from "react-icons/io";
+import toast from "react-hot-toast";
 
 export default function AdminMessagesPage() {
 	const [inquiries, setInquiries] = useState([]);
@@ -79,11 +80,12 @@ export default function AdminMessagesPage() {
 				}
 			)
 			.then(() => {
-				alert("Response saved and inquiry marked as resolved.");
+				toast.success("Response saved and inquiry marked as resolved.");
 				setModalOpened(false);
 				setLoading(true);
 			})
 			.catch((err) => {
+				toast.error("Error updating inquiry.");
 				console.error("Error updating inquiry:", err);
 			});
 	};
