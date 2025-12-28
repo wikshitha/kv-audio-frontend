@@ -1,7 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 
-const anon_key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFhaWxmeXVleXJ1a3BucHN4cmpvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDAxNDc3ODYsImV4cCI6MjA1NTcyMzc4Nn0.mkToRcBi59Ui5DBzuI0lClomM1BzBfjlxmHdRIRYcqM";
-const superbase_url = "https://qailfyueyrukpnpsxrjo.supabase.co";
+const anon_key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFwaWtmY2xocW15ZHZvcW1zZGprIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY5MjQ2MjcsImV4cCI6MjA4MjUwMDYyN30.XIK4p1YUU2Xuq-bu3zt7L-0GxSIyMjQdfCps74fSd2I";
+const superbase_url = "https://apikfclhqmydvoqmsdjk.supabase.co";
 
 const superbase = createClient(superbase_url, anon_key);
 
