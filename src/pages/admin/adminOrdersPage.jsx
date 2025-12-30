@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { IoMdCloseCircleOutline } from "react-icons/io";
 
 export default function AdminOrdersPage() {
@@ -37,10 +38,11 @@ export default function AdminOrdersPage() {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      alert(`Order ${status}`);
+      toast.success(`Order ${status}`);
       setModalOpened(false);
       setLoading(true);
     } catch (error) {
+      toast.error("Error updating order status");
       console.error("Error updating order status:", error);
     }
   };
