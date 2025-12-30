@@ -7,14 +7,16 @@ import { useGoogleLogin } from "@react-oauth/google";
 import {
   FaEnvelope,
   FaLock,
-  FaGoogle,
   FaUserCircle,
   FaSpinner,
+  FaEye,
+  FaEyeSlash,
 } from "react-icons/fa";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loadingRegister, setLoadingRegister] = useState(false);
   const navigate = useNavigate();
@@ -89,6 +91,10 @@ export default function LoginPage() {
     <div className="bg-picture flex justify-center items-center">
       <form onSubmit={handleOnSubmit} className="form-container shadow-lg rounded-xl">
         <div className="form-header relative">
+          <div className="logo-wrapper">
+            <img src="/logo.png" alt="KV-Audio Logo" className="shop-logo" />
+            <h1 className="shop-name">KV-Audio</h1>
+          </div>
           <div className="avatar-wrapper">
             <div className="profile-avatar">
               <FaUserCircle size={80} className="text-[#AA60C8]" />
@@ -112,12 +118,18 @@ export default function LoginPage() {
           <div className="input-icon-wrapper">
             <FaLock className="input-icon" />
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               placeholder="Password"
               className="input-field"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
+            <div
+              className="password-toggle-icon"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </div>
           </div>
         </div>
 
@@ -126,7 +138,7 @@ export default function LoginPage() {
         </button>
 
         <div className="google-login-btn" onClick={googleLogin}>
-          <FaGoogle className="google-icon" />
+          <img src="/google logo.jpg" alt="Google" className="google-icon" />
           <span>Login with Google</span>
         </div>
 
