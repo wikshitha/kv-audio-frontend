@@ -13,6 +13,8 @@ import {
   FaMapMarkerAlt,
   FaPhone,
   FaSpinner,
+  FaEye,
+  FaEyeSlash,
 } from "react-icons/fa";
 
 export default function RegisterPage() {
@@ -20,6 +22,7 @@ export default function RegisterPage() {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [address, setAddress] = useState("");
   const [phone, setPhone] = useState("");
   const [profilePic, setProfilePic] = useState(null);
@@ -31,8 +34,13 @@ export default function RegisterPage() {
   async function handleOnSubmit(e) {
     e.preventDefault();
 
-    if (!firstName || !lastName || !email || !password || !address || !phone || !profilePic) {
+    if (!firstName || !lastName || !email || !password || !address || !phone) {
       toast.error("Please fill in all fields.");
+      return;
+    }
+
+    if (!profilePic) {
+      toast.error("Please upload a profile picture.");
       return;
     }
 
@@ -77,6 +85,10 @@ export default function RegisterPage() {
     <div className="bg-picture flex justify-center items-center">
       <form onSubmit={handleOnSubmit} className="form-container shadow-lg rounded-xl">
         <div className="form-header relative">
+          <div className="logo-wrapper">
+            <img src="/logo.png" alt="KV-Audio Logo" className="shop-logo" />
+            <h1 className="shop-name">KV-Audio</h1>
+          </div>
           <label htmlFor="profilePic" className="avatar-wrapper">
             <img
               src={profilePic ? URL.createObjectURL(profilePic) : "/user.png"}
@@ -134,12 +146,18 @@ export default function RegisterPage() {
           <div className="input-icon-wrapper">
             <FaLock className="input-icon" />
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               placeholder="Password"
               className="input-field"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
+            <div
+              className="password-toggle-icon"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </div>
           </div>
 
           <div className="input-icon-wrapper">

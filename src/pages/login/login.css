@@ -41,6 +41,29 @@
   position: relative;
 }
 
+.logo-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.shop-logo {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 8px rgba(170, 96, 200, 0.6));
+}
+
+.shop-name {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #ffffff;
+  text-shadow: 0 0 10px rgba(170, 96, 200, 0.8);
+  letter-spacing: 1px;
+}
+
 .avatar-wrapper {
   display: flex;
   justify-content: center;
@@ -81,9 +104,28 @@
   pointer-events: none;
 }
 
+.password-toggle-icon {
+  position: absolute;
+  top: 50%;
+  right: 14px;
+  transform: translateY(-50%);
+  color: #D69ADE;
+  font-size: 18px;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.3s ease;
+}
+
+.password-toggle-icon:hover {
+  color: #AA60C8;
+}
+
 .input-field {
   width: 100%;
-  padding: 12px 14px 12px 42px;
+  padding: 12px 40px 12px 42px;
   background: rgba(255, 223, 239, 0.1);
   border: 1px solid #D69ADE;
   border-radius: 8px;
@@ -127,28 +169,41 @@
 
 /* Google login */
 .google-login-btn {
-  background-color: #fff;
-  color: #333;
+  background-color: #ffffff;
+  color: #1f1f1f;
   padding: 12px;
   margin-top: 15px;
-  border-radius: 8px;
-  font-weight: bold;
-  font-size: 16px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 1rem;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #e0e0e0;
 }
 
 .google-login-btn:hover {
-  background-color: #f1f1f1;
+  background-color: #f8f9fa;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-color: #d0d0d0;
+}
+
+.google-login-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .google-icon {
-  font-size: 18px;
-  color: #db4437;
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
 }
 
 /* Redirect */
