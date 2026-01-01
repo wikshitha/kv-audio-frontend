@@ -42,6 +42,7 @@ export default function Home() {
     axios
       .get(`${import.meta.env.VITE_BACKEND_URL}/api/reviews`)
       .then((res) => {
+        console.log("Reviews data:", res.data); // Debug log
         setReviews(res.data.filter((review) => review.isApproved));
         setIsLoading(false);
       })
@@ -67,11 +68,19 @@ export default function Home() {
         },
       })
       .then((res) => {
-        toast.success(res.data.message);
+        toast.success("Review submitted successfully! It will appear after admin approval.");
         setNewReview({ coment: "", rating: "" });
         setIsModalOpen(false);
-        setIsLoading(true);
-        setReviews([...reviews, res.data.review]);
+        
+        // Refresh reviews from server to get the latest data
+        axios
+          .get(`${import.meta.env.VITE_BACKEND_URL}/api/reviews`)
+          .then((response) => {
+            setReviews(response.data.filter((review) => review.isApproved));
+          })
+          .catch((error) => {
+            console.error("Failed to refresh reviews:", error);
+          });
       })
       .catch((error) => {
         console.error("Failed to add review:", error);

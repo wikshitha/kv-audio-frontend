@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 export default function ProductCard({ item }) {
   return (
-    <div className="w-[300px] bg-[#FFDFEF] rounded-2xl shadow-md overflow-hidden m-4 flex flex-col transition-transform hover:scale-105 duration-300">
+    <div className="bg-[#FFDFEF] rounded-2xl shadow-md overflow-hidden flex flex-col transition-transform hover:scale-105 duration-300 h-full">
       <img
         src={item.images[0]}
         alt={item.name}
@@ -10,9 +10,11 @@ export default function ProductCard({ item }) {
       />
 
       <div className="p-4 flex flex-col flex-grow">
-      <h2 className="text-xl font-bold text-gray-800">{item.nameHighlighted || item.name}</h2>
+        <h2 className="text-xl font-bold text-gray-800 line-clamp-2 min-h-[3.5rem]">
+          {item.nameHighlighted || item.name}
+        </h2>
         <p className="text-sm text-[#AA60C8] mt-1">{item.category}</p>
-        <p className="text-sm text-gray-700 mt-3 line-clamp-3">
+        <p className="text-sm text-gray-700 mt-3 line-clamp-3 min-h-[4.5rem]">
           {item.description}
         </p>
 
@@ -32,9 +34,13 @@ export default function ProductCard({ item }) {
         </div>
 
         {item.dimensions && (
-          <div className="mt-3 text-sm text-gray-600">
+          <div className="mt-3 text-sm text-gray-600 min-h-[1.75rem]">
             <span className="font-medium">Dimensions:</span> {item.dimensions}
           </div>
+        )}
+        
+        {!item.dimensions && (
+          <div className="mt-3 min-h-[1.75rem]"></div>
         )}
       </div>
 
